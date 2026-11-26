@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>F&J REPAIRS SRL - App Móvil de Campo & Inspección QR</title>
+  <meta name="description" content="App oficial de campo para operadores y supervisores de F&J REPAIRS SRL: Inspección pre-uso con horómetro, documentación técnica y bitácora de mantenimientos con códigos QR.">
+  <meta name="theme-color" content="#0284c7">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css?v=2.4">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230284c7'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>">
+</head>
+<body class="page-mobile">
+
+  <!-- Mobile Top Header Bar -->
+  <header class="mobile-top-header" id="mobile-top-header">
+    <div class="mobile-top-header-inner">
+      <div class="mobile-header-brand" onclick="location.reload()" title="Recargar App Móvil">
+        <div class="brand-logo-icon">
+          <!-- Power Tower / Crane Bolt Icon -->
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2L2 22h20L12 2zm0 3.8L18.2 19H5.8L12 5.8zM11 11h2v4h-2zm0 5h2v2h-2z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="mobile-brand-title">F&J REPAIRS SRL</h1>
+          <span class="mobile-brand-sub">App Móvil de Campo & QR</span>
+        </div>
+      </div>
+
+      <div class="mobile-header-actions">
+        <!-- Quick QR Scanner Button -->
+        <button class="icon-btn mobile-icon-btn" id="btn-header-qr-scanner" onclick="App.openQRScannerModal()" title="Escanear Código QR de Unidad">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm9.5-6.5v3h-3v-3h3M19 5h-6v6h6V5zm-6 8h1.5v1.5H13V13zm1.5 1.5H16V16h-1.5v-1.5zM16 13h1.5v1.5H16V13zm-3 3h1.5v1.5H13V16zm1.5 1.5H16V19h-1.5v-1.5zM16 16h1.5v1.5H16V16zm1.5-1.5H19V16h-1.5v-1.5zm0 3H19V19h-1.5v-1.5zM17.5 13H19v1.5h-1.5V13z"/>
+          </svg>
+        </button>
+
+        <!-- Sent Emails Drawer Button -->
+        <button class="icon-btn mobile-icon-btn" id="btn-header-emails" onclick="App.openEmailsDrawer()" title="Notificaciones / Correos">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+          </svg>
+          <span class="badge-count" id="email-badge-count">1</span>
+        </button>
+
+        <!-- User Role Display -->
+        <div class="user-badge mobile-user-badge" id="header-user-display" title="Usuario activo"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Mobile Content Area -->
+  <main class="mobile-main-wrapper">
+    <div id="app-main-content">
+      <!-- Injected dynamically by App.renderMobileView() -->
+    </div>
+  </main>
+
+  <!-- Mount Point for Dialogs, Inspection Forms, QR Plates and Modals -->
+  <div id="modal-mount-point"></div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/qr-engine.js?v=2.4"></script>
+  <script src="js/app.js?v=2.4"></script>
+</body>
+</html>

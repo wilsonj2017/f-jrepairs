@@ -1,0 +1,20 @@
+{
+  "name": "fj-repairs-fleet-system",
+  "version": "1.0.0",
+  "description": "Sistema de Registro de Mantenimientos, Inspecciones Pre-Uso y Gestión de Flota con Códigos QR para F&J REPAIRS SRL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "fleet-management",
+    "maintenance",
+    "qr-code",
+    "crane-inspection",
+    "pre-uso",
+    "torres-electricas"
+  ],
+  "author": "F&J REPAIRS SRL",
+  "license": "ISC"
+}

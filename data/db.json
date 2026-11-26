@@ -1,0 +1,707 @@
+{
+  "company": {
+    "name": "F&J REPAIRS SRL",
+    "rnc": "132-45892-1",
+    "sector": "Instalación de Torres Eléctricas de Alta Tensión y Montaje de Subestaciones",
+    "manager": "Frankely de Jesús Gil López",
+    "managerRole": "Gerente Técnico & Operaciones",
+    "executive": "Jonathan Gil",
+    "executiveRole": "Gerencia General",
+    "email": "operaciones@fjrepairs.com",
+    "supportEmail": "contacto@fjrepairs.com",
+    "phone": "+1 (809) 555-0192",
+    "whatsapp": "+18095550192",
+    "address": "Av. Luperón, Zona Industrial Herrera, Santo Domingo, R.D.",
+    "website": "www.fjrepairs.com"
+  },
+  "users": [
+    {
+      "id": "u1",
+      "username": "frankely.gil",
+      "password": "123",
+      "name": "Frankely de Jesús Gil López",
+      "role": "Gerente Técnico / Encargado",
+      "email": "frankely.gil@fjrepairs.com",
+      "phone": "+1 (809) 555-0192"
+    },
+    {
+      "id": "u2",
+      "username": "jonathan.gil",
+      "password": "123",
+      "name": "Jonathan Gil",
+      "role": "Gerencia General",
+      "email": "jonathan.gil@fjrepairs.com",
+      "phone": "+1 (829) 555-8822"
+    },
+    {
+      "id": "u3",
+      "username": "operador.azua",
+      "password": "123",
+      "name": "Carlos M. Santana",
+      "role": "Operador Certificado Grúa",
+      "email": "csantana@fjrepairs.com",
+      "phone": "+1 (849) 333-4411"
+    },
+    {
+      "id": "u4",
+      "username": "mantenimiento.taller",
+      "password": "123",
+      "name": "Ramón Almonte",
+      "role": "Técnico Mecánico Hidráulico",
+      "email": "ralmonte@fjrepairs.com",
+      "phone": "+1 (809) 777-2299"
+    }
+  ],
+  "equipos": [
+    {
+      "id": "F-07",
+      "codigo": "F-07 28 TNS",
+      "nombre": "Grúa Telescópica 28 TNS",
+      "tipo": "Grúa sobre Camión",
+      "capacidad": "28 Toneladas",
+      "marca": "Terex / National Crane",
+      "modelo": "Series 900A",
+      "anio": 2021,
+      "placa": "L-392811",
+      "chasis": "3FDNF82X0MA194821",
+      "proyecto": "Proyecto Subestación 345KV Azua",
+      "ubicacion": "Azua de Compostela, R.D.",
+      "coordenadas": {
+        "lat": 18.4539,
+        "lng": -70.7344
+      },
+      "estado": "Operativo",
+      "horometroActual": 4890,
+      "intervaloMantenimiento": 500,
+      "ultimoMantenimientoHoras": 4890,
+      "proximoMantenimientoHoras": 5390,
+      "foto": "assets/crane_f07_28t.jpg",
+      "encargadoAsignado": "Frankely de Jesús Gil López",
+      "operadorAsignado": "Carlos M. Santana",
+      "qrUrl": "?equipo=F-07"
+    },
+    {
+      "id": "F-02",
+      "codigo": "F-02 24 TNS",
+      "nombre": "Grúa Camión 24 TNS",
+      "tipo": "Grúa Montada en Camión",
+      "capacidad": "24 Toneladas",
+      "marca": "Manitowoc / Grove",
+      "modelo": "TMS500E",
+      "anio": 2019,
+      "placa": "L-281903",
+      "chasis": "1HTMNAAM8CH638192",
+      "proyecto": "Línea de Transmisión 138KV Monte Plata",
+      "ubicacion": "Monte Plata, R.D.",
+      "coordenadas": {
+        "lat": 18.8078,
+        "lng": -69.7839
+      },
+      "estado": "Mantenimiento Próximo",
+      "horometroActual": 3465,
+      "intervaloMantenimiento": 250,
+      "ultimoMantenimientoHoras": 3250,
+      "proximoMantenimientoHoras": 3500,
+      "foto": "assets/crane_f04_40t.jpg",
+      "encargadoAsignado": "Frankely de Jesús Gil López",
+      "operadorAsignado": "Manuel E. Rosario",
+      "qrUrl": "?equipo=F-02"
+    },
+    {
+      "id": "F-04",
+      "codigo": "F-04 40 TNS",
+      "nombre": "Grúa Todo Terreno 40 TNS",
+      "tipo": "Grúa Telescópica All-Terrain",
+      "capacidad": "40 Toneladas",
+      "marca": "Liebherr",
+      "modelo": "LTM 1040-2.1",
+      "anio": 2022,
+      "placa": "L-441029",
+      "chasis": "W09104021NN019283",
+      "proyecto": "Subestación Norte 138KV Santiago",
+      "ubicacion": "Santiago de los Caballeros, R.D.",
+      "coordenadas": {
+        "lat": 19.4517,
+        "lng": -70.697
+      },
+      "estado": "Operativo",
+      "horometroActual": 6120,
+      "intervaloMantenimiento": 500,
+      "ultimoMantenimientoHoras": 6000,
+      "proximoMantenimientoHoras": 6500,
+      "foto": "assets/crane_f04_40t.jpg",
+      "encargadoAsignado": "Frankely de Jesús Gil López",
+      "operadorAsignado": "Jorge L. Peña",
+      "qrUrl": "?equipo=F-04"
+    },
+    {
+      "id": "F-06",
+      "codigo": "F-06 35 TNS",
+      "nombre": "Grúa Móvil 35 TNS",
+      "tipo": "Grúa Rough Terrain",
+      "capacidad": "35 Toneladas",
+      "marca": "Tadano",
+      "modelo": "GR-350XL",
+      "anio": 2020,
+      "placa": "L-352018",
+      "chasis": "TDN350X900281",
+      "proyecto": "Línea de Interconexión Autopista Duarte",
+      "ubicacion": "Bonao / Monseñor Nouel, R.D.",
+      "coordenadas": {
+        "lat": 18.9467,
+        "lng": -70.4092
+      },
+      "estado": "Operativo",
+      "horometroActual": 2780,
+      "intervaloMantenimiento": 250,
+      "ultimoMantenimientoHoras": 2750,
+      "proximoMantenimientoHoras": 3000,
+      "foto": "assets/crane_f07_28t.jpg",
+      "encargadoAsignado": "Frankely de Jesús Gil López",
+      "operadorAsignado": "Pedro J. Martínez",
+      "qrUrl": "?equipo=F-06"
+    },
+    {
+      "id": "F-01",
+      "codigo": "F-01 18 TNS",
+      "nombre": "Camión Grúa Canasta 18 TNS",
+      "tipo": "Camión con Brazo Articulado y Cesta Dieléctrica",
+      "capacidad": "18 Toneladas / Altura 26m",
+      "marca": "Freightliner / Palfinger",
+      "modelo": "PK 23500 Performance",
+      "anio": 2018,
+      "placa": "L-180042",
+      "chasis": "1FVACWDC9HH491023",
+      "proyecto": "Taller Central & Mantenimiento Flota",
+      "ubicacion": "Santo Domingo Oeste, R.D.",
+      "coordenadas": {
+        "lat": 18.4861,
+        "lng": -69.9312
+      },
+      "estado": "Mantenimiento Vencido",
+      "horometroActual": 2005,
+      "intervaloMantenimiento": 250,
+      "ultimoMantenimientoHoras": 1750,
+      "proximoMantenimientoHoras": 2000,
+      "foto": "assets/repuesto_referencia.jpg",
+      "encargadoAsignado": "Frankely de Jesús Gil López",
+      "operadorAsignado": "Ramón Almonte",
+      "qrUrl": "?equipo=F-01"
+    }
+  ],
+  "documentos": [
+    {
+      "id": "doc-01",
+      "equipoId": "F-07",
+      "categoria": "Matrícula y Propiedad",
+      "titulo": "Matrícula Oficial y Permiso de Circulación DGII - F-07",
+      "formato": "PDF",
+      "tamano": "2.4 MB",
+      "fecha": "2026-01-15",
+      "vencimiento": "2027-01-15",
+      "url": "docs/matricula_f07.pdf",
+      "descripcion": "Certificado de registro vehicular oficial emitido por la Dirección General de Impuestos Internos (DGII)."
+    },
+    {
+      "id": "doc-02",
+      "equipoId": "F-07",
+      "categoria": "Certificación del Equipo",
+      "titulo": "Certificado de Inspección Técnica Estructural e Izaje (Prueba de Carga 28T)",
+      "formato": "PDF",
+      "tamano": "4.1 MB",
+      "fecha": "2026-03-10",
+      "vencimiento": "2027-03-10",
+      "url": "docs/certificacion_tecnica_f07.pdf",
+      "descripcion": "Inspección de soldaduras de pluma, prueba de sobrecarga al 110%, verificación de cable de izaje y celda de carga LMI por Bureau Veritas RD."
+    },
+    {
+      "id": "doc-03",
+      "equipoId": "F-07",
+      "categoria": "Certificación Operador",
+      "titulo": "Certificación y Carnet Operador de Grúa - Carlos M. Santana",
+      "formato": "PDF",
+      "tamano": "1.8 MB",
+      "fecha": "2025-08-20",
+      "vencimiento": "2027-08-20",
+      "url": "docs/cert_operador_carlos_santana.pdf",
+      "descripcion": "Licencia Especial Categoría 4 DGTyTT y Certificación Internacional NCCCO en Operación Segura de Grúas Móviles Telescópicas."
+    },
+    {
+      "id": "doc-04",
+      "equipoId": "F-07",
+      "categoria": "Bitácoras Mantenimiento",
+      "titulo": "Bitácora 1: Libro Historial de Mantenimientos Preventivos y Correctivos F-07",
+      "formato": "PDF",
+      "tamano": "6.8 MB",
+      "fecha": "2026-10-18",
+      "vencimiento": "Vigente Permanente",
+      "url": "docs/bitacora_mantenimiento_f07.pdf",
+      "descripcion": "Registro integral de cambios de aceite, reemplazo de filtros hidráulicos, inspección de zapatas y horas de motor."
+    },
+    {
+      "id": "doc-05",
+      "equipoId": "F-07",
+      "categoria": "Repuestos y Suplidores",
+      "titulo": "Catálogo Maestro de Números de Parte, Filtros y Proveedores Aprobados",
+      "formato": "PDF",
+      "tamano": "3.2 MB",
+      "fecha": "2026-09-01",
+      "vencimiento": "2027-09-01",
+      "url": "docs/repuestos_suplidores_f07.pdf",
+      "descripcion": "Desglose de códigos OEM de sellos Parker, filtros Donaldson/Cat, guayas de acero Bridon y casas comerciales en Santo Domingo."
+    }
+  ],
+  "repuestosSuplidores": [
+    {
+      "id": "rep-1",
+      "equipoId": "F-07",
+      "nombre": "Filtro de Aceite de Motor Cat/Perkins",
+      "numeroParte": "1G-8878 / 1R-0716",
+      "categoria": "Filtros y Lubricación",
+      "suplidor": "Distribuidora Corripio Industrial / Santo Domingo Motors",
+      "telefonoSuplidor": "+1 (809) 560-1200",
+      "precioAprox": "RD$ 3,450.00",
+      "stockSugerido": 4
+    },
+    {
+      "id": "rep-2",
+      "equipoId": "F-07",
+      "nombre": "Filtro Hidráulico Principal de Alta Presión",
+      "numeroParte": "HF-6510 / P164378",
+      "categoria": "Sistema Hidráulico",
+      "suplidor": "Repuestos Hidráulicos del Caribe SRL",
+      "telefonoSuplidor": "+1 (809) 537-8844",
+      "precioAprox": "RD$ 8,900.00",
+      "stockSugerido": 2
+    },
+    {
+      "id": "rep-3",
+      "equipoId": "F-07",
+      "nombre": "Manguera Hidráulica 4 Mallas 3/4\" 5000 PSI",
+      "numeroParte": "GATES-MEGASYS-G2-12G",
+      "categoria": "Líneas de Presión",
+      "suplidor": "Mangueras y Conexiones Dominicana (MANCODOM)",
+      "telefonoSuplidor": "+1 (809) 567-3311",
+      "precioAprox": "RD$ 6,200.00",
+      "stockSugerido": 3
+    },
+    {
+      "id": "rep-4",
+      "equipoId": "F-07",
+      "nombre": "Kit Sellos Cilindro Extensión Estabilizador Outrigger",
+      "numeroParte": "PARKER-SK-88210-HD",
+      "categoria": "Sellos y Empacaduras",
+      "suplidor": "Hydraulic Seals & Gaskets RD",
+      "telefonoSuplidor": "+1 (809) 682-1090",
+      "precioAprox": "RD$ 14,500.00",
+      "stockSugerido": 1
+    },
+    {
+      "id": "rep-5",
+      "equipoId": "F-07",
+      "nombre": "Cable de Acero Antigiratorio 19x7 de 5/8\" (16mm) para Winche",
+      "numeroParte": "BRIDON-DYFORM-16MM-150M",
+      "categoria": "Cables de Izaje",
+      "suplidor": "Equipos y Cables Industriales del Norte",
+      "telefonoSuplidor": "+1 (809) 581-9922",
+      "precioAprox": "RD$ 115,000.00",
+      "stockSugerido": 1
+    }
+  ],
+  "solicitudesDocumentos": [
+    {
+      "id": "sol-101",
+      "equipoId": "F-07",
+      "equipoNombre": "F-07 28 TNS",
+      "solicitante": "Ing. Rafael Montes de Oca",
+      "empresa": "ETED (Empresa de Transmisión Eléctrica Dominicana)",
+      "correo": "rmontes@eted.gov.do",
+      "cargo": "Supervisor de Seguridad y Medio Ambiente (HSE)",
+      "telefono": "+1 (829) 441-2910",
+      "justificacion": "Revisión documental obligatoria de capacidad de carga y certificación de operador previa al izaje de torres #12 a #15 en línea Azua-Baní.",
+      "fecha": "2026-10-21 09:30 AM",
+      "estado": "Aprobado",
+      "permisoOtorgado": "Lectura y Descarga (72 hrs)"
+    },
+    {
+      "id": "sol-100",
+      "equipoId": "F-04",
+      "equipoNombre": "F-04 40 TNS",
+      "solicitante": "Ing. Brenda Peña",
+      "empresa": "Consorcio Energético Dominicano",
+      "correo": "bpena@consorcioenergia.com.do",
+      "cargo": "Gerente de Proyectos de Subestaciones",
+      "telefono": "+1 (809) 332-9011",
+      "justificacion": "Verificación de póliza de seguro y certificación anual SGS para ingreso al parque eléctrico.",
+      "fecha": "2026-10-20 14:15 PM",
+      "estado": "Aprobado",
+      "permisoOtorgado": "Lectura y Descarga (72 hrs)"
+    }
+  ],
+  "mantenimientos": [
+    {
+      "id": "mant-1792614885216",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "tipo": "Preventivo",
+      "fecha": "2026-10-21T20:33",
+      "horometro": 4890,
+      "descripcion": "Cambio de aceite motor y filtros de aire",
+      "piezasUtilizadas": "Filtros y Aceite Hidraulico",
+      "realizadoPor": "Frankely de Jesús Gil López (Técnico F&J Repairs)",
+      "ubicacion": "In-situ en el proyecto",
+      "costoManoObra": 12000,
+      "costoRepuestos": 18500,
+      "costoTotal": 30500,
+      "moneda": "DOP",
+      "suplidorRepuestos": "Repuestos Hidraulicos del Caribe",
+      "facturaSuplidor": "N/A",
+      "fotoReferencia": "http://localhost:3000/assets/repuesto_referencia.jpg"
+    },
+    {
+      "id": "mant-301",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "tipo": "Preventivo",
+      "fecha": "2026-10-05 08:30 AM",
+      "horometro": 4500,
+      "descripcion": "Mantenimiento preventivo general de 4,500 Horas. Cambio de aceite motor 15W-40, filtro de aceite Cat, filtro de combustible primario y secundario, engrase general de quinta rueda, poleas y pluma telescópica.",
+      "piezasUtilizadas": "Filtro Cat 1G-8878 (1 ud), Filtro Combustible Perkins (2 uds), 8 Galones Aceite Mobil Delvac 15W40, Grasa EP-2",
+      "realizadoPor": "Frankely de Jesús Gil López & Ramón Almonte",
+      "ubicacion": "In-situ en el proyecto (Subestación Azua 345KV)",
+      "costoManoObra": 18000,
+      "costoRepuestos": 26500,
+      "costoTotal": 44500,
+      "moneda": "DOP",
+      "suplidorRepuestos": "Distribuidora Corripio Industrial / MANCODOM",
+      "facturaSuplidor": "B01-00049281",
+      "fotoReferencia": "assets/repuesto_referencia.jpg"
+    },
+    {
+      "id": "mant-298",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "tipo": "Correctivo",
+      "fecha": "2026-09-18 11:15 AM",
+      "horometro": 4320,
+      "descripcion": "Corrección de goteo de aceite hidráulico en acople de manguera flexible de retorno de pluma telescópica. Reemplazo de manguera de 4 mallas de 3/4\" y purgado del circuito.",
+      "piezasUtilizadas": "Manguera Gates Megasys G2-12G (1 unidad de 2.8m), 2 Niples JIC Acero",
+      "realizadoPor": "Ramón Almonte (Técnico Mecánico)",
+      "ubicacion": "In-situ en el proyecto (Subestación Azua 345KV)",
+      "costoManoObra": 8500,
+      "costoRepuestos": 9400,
+      "costoTotal": 17900,
+      "moneda": "DOP",
+      "suplidorRepuestos": "Repuestos Hidráulicos del Caribe SRL",
+      "facturaSuplidor": "B01-00038102",
+      "fotoReferencia": "assets/repuesto_referencia.jpg"
+    }
+  ],
+  "inspecciones": [
+    {
+      "id": "insp-1795613731960",
+      "equipoId": "F-06",
+      "equipoCodigo": "F-06 35 TNS",
+      "fecha": "2026-11-25",
+      "hora": "09:35 a. m.",
+      "usuario": "Carlos M. Santana",
+      "rolUsuario": "Operador Certificado Grúa",
+      "horometro": 2780,
+      "horasRestantesPM": 220,
+      "resultado": "Aprobado Operativo",
+      "observaciones": "",
+      "hallazgos": [],
+      "firmaDigital": "Confirmado por usuario",
+      "correoEnviado": "operaciones@fjrepairs.com, contacto@fjrepairs.com"
+    },
+    {
+      "id": "insp-1795613599353",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "fecha": "2026-11-25",
+      "hora": "09:33 a. m.",
+      "usuario": "Carlos M. Santana",
+      "rolUsuario": "Operador Certificado Grúa",
+      "horometro": 4890,
+      "horasRestantesPM": 500,
+      "resultado": "Aprobado Operativo",
+      "observaciones": "",
+      "hallazgos": [],
+      "firmaDigital": "Firmado digitalmente",
+      "correoEnviado": "operaciones@fjrepairs.com, contacto@fjrepairs.com"
+    },
+    {
+      "id": "insp-1792614806785",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "fecha": "2026-10-21",
+      "hora": "04:33 p. m.",
+      "usuario": "Frankely de Jesús Gil López",
+      "rolUsuario": "Gerente Técnico / Encargado",
+      "horometro": 4890,
+      "horasRestantesPM": 110,
+      "resultado": "Aprobado Operativo",
+      "observaciones": "",
+      "hallazgos": [],
+      "firmaDigital": "Firmado digitalmente",
+      "correoEnviado": "operaciones@fjrepairs.com, contacto@fjrepairs.com"
+    },
+    {
+      "id": "insp-1792614509522",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "fecha": "2026-10-21",
+      "hora": "04:28 p. m.",
+      "usuario": "Frankely de Jesús Gil López",
+      "rolUsuario": "Gerente Técnico / Encargado",
+      "horometro": 4890,
+      "horasRestantesPM": 110,
+      "resultado": "Aprobado Operativo",
+      "observaciones": "",
+      "hallazgos": [],
+      "firmaDigital": "Firmado digitalmente",
+      "correoEnviado": "operaciones@fjrepairs.com, contacto@fjrepairs.com"
+    },
+    {
+      "id": "insp-501",
+      "equipoId": "F-07",
+      "equipoCodigo": "F-07 28 TNS",
+      "fecha": "2026-10-21",
+      "hora": "07:15 AM",
+      "usuario": "Carlos M. Santana",
+      "rolUsuario": "Operador Certificado",
+      "horometro": 4875,
+      "horasRestantesPM": 125,
+      "resultado": "Aprobado con Observaciones",
+      "observaciones": "Nivel de fluidos y sistema de izaje en óptimas condiciones. Se detectó leve polvo en zapatas de estabilizador trasero derecho por terreno arenoso en Azua. Limpiado antes de maniobra.",
+      "hallazgos": [
+        {
+          "seccion": "Estabilizadores y Chasis",
+          "item": "Zapatas y cilindros de apoyo",
+          "estado": "Conforme luego de limpieza",
+          "foto": "assets/crane_f07_screenshot.png"
+        }
+      ],
+      "firmaDigital": "Firmado digitalmente por Carlos M. Santana - Céd: 001-XXXXXXX-2",
+      "correoEnviado": "operaciones@fjrepairs.com, frankely.gil@fjrepairs.com"
+    }
+  ],
+  "correosEnviados": [
+    {
+      "id": "email-1795613731960",
+      "destinatario": "operaciones@fjrepairs.com, Frankely de Jesús Gil López",
+      "asunto": "[INSPECCIÓN PRE-USO] F-06 35 TNS - Horómetro: 2780h - Estado: Aprobado Operativo",
+      "fecha": "2026-11-25 09:35 a. m.",
+      "remitente": "inspecciones@fjrepairs.com",
+      "cuerpo": "Se ha registrado una nueva inspección pre-operacional:\n• Equipo: F-06 35 TNS (Grúa Móvil 35 TNS)\n• Proyecto: Línea de Interconexión Autopista Duarte\n• Inspector/Operador: Carlos M. Santana\n• Horómetro actual: 2780 hrs (Restan 220 hrs para Mantenimiento Preventivo de 3000 hrs)\n• Resultado: Aprobado Operativo\n• Observaciones: Sin novedades\n• Hallazgos reportados: 0 elementos.\n\nLa inspección ha sido archivada automáticamente en la ficha técnica del equipo."
+    },
+    {
+      "id": "email-1795613599353",
+      "destinatario": "operaciones@fjrepairs.com, Frankely de Jesús Gil López",
+      "asunto": "[INSPECCIÓN PRE-USO] F-07 28 TNS - Horómetro: 4890h - Estado: Aprobado Operativo",
+      "fecha": "2026-11-25 09:33 a. m.",
+      "remitente": "inspecciones@fjrepairs.com",
+      "cuerpo": "Se ha registrado una nueva inspección pre-operacional:\n• Equipo: F-07 28 TNS (Grúa Telescópica 28 TNS)\n• Proyecto: Proyecto Subestación 345KV Azua\n• Inspector/Operador: Carlos M. Santana\n• Horómetro actual: 4890 hrs (Restan 500 hrs para Mantenimiento Preventivo de 5390 hrs)\n• Resultado: Aprobado Operativo\n• Observaciones: Sin novedades\n• Hallazgos reportados: 0 elementos.\n\nLa inspección ha sido archivada automáticamente en la ficha técnica del equipo."
+    },
+    {
+      "id": "email-1792694179528",
+      "destinatario": "rmontes@eted.gov.do",
+      "asunto": "[ACCESO AUTORIZADO] Documentación de Unidad F-07 28 TNS - F&J REPAIRS SRL",
+      "fecha": "2026-10-22 18:36",
+      "remitente": "operaciones@fjrepairs.com",
+      "cuerpo": "Estimado(a) Ing. Rafael Montes de Oca,\n\nF&J REPAIRS SRL ha autorizado su solicitud de acceso a la documentación técnica del equipo F-07 28 TNS.\nNivel de permiso: Lectura y Descarga (72 hrs)\nPuede consultar y descargar matrículas, certificaciones de carga, carnet de operador y bitácoras vigentes.\n\nAtentamente,\nFrankely de Jesús Gil López - Gerente Técnico & Operaciones\nF&J REPAIRS SRL"
+    },
+    {
+      "id": "email-1792614885216",
+      "destinatario": "operaciones@fjrepairs.com, Jonathan Gil",
+      "asunto": "[REGISTRO MANTENIMIENTO PREVENTIVO] F-07 28 TNS - Total: RD$ 30,500",
+      "fecha": "2026-10-21 20:34",
+      "remitente": "taller@fjrepairs.com",
+      "cuerpo": "Se ha registrado una nueva orden de mantenimiento en el sistema:\n• Tipo: Mantenimiento Preventivo\n• Equipo: F-07 28 TNS (Grúa Telescópica 28 TNS)\n• Ubicación de trabajo: In-situ en el proyecto\n• Responsable: Frankely de Jesús Gil López (Técnico F&J Repairs)\n• Horómetro: 4890 hrs (Próximo preventivo programado a las 5390 hrs)\n• Costo Mano de Obra: RD$ 12,000\n• Costo Repuestos: RD$ 18,500\n• Costo Total: RD$ 30,500\n• Suplidor: Repuestos Hidraulicos del Caribe (Factura/NCF: )\n• Piezas/Repuestos: Filtros y Aceite Hidraulico\n• Descripción del trabajo: Cambio de aceite motor y filtros de aire\n\nEste registro ha sido anexado de forma permanente a la Bitácora 1 de la unidad."
+    },
+    {
+      "id": "email-1792614806785",
+      "destinatario": "operaciones@fjrepairs.com, Frankely de Jesús Gil López",
+      "asunto": "[INSPECCIÓN PRE-USO] F-07 28 TNS - Horómetro: 4890h - Estado: Aprobado Operativo",
+      "fecha": "2026-10-21 04:33 p. m.",
+      "remitente": "inspecciones@fjrepairs.com",
+      "cuerpo": "Se ha registrado una nueva inspección pre-operacional:\n• Equipo: F-07 28 TNS (Grúa Telescópica 28 TNS)\n• Proyecto: Proyecto Subestación 345KV Azua\n• Inspector/Operador: Frankely de Jesús Gil López\n• Horómetro actual: 4890 hrs (Restan 110 hrs para Mantenimiento Preventivo de 5000 hrs)\n• Resultado: Aprobado Operativo\n• Observaciones: Sin novedades\n• Hallazgos reportados: 0 elementos.\n\nLa inspección ha sido archivada automáticamente en la ficha técnica del equipo."
+    },
+    {
+      "id": "email-1792614509522",
+      "destinatario": "operaciones@fjrepairs.com, Frankely de Jesús Gil López",
+      "asunto": "[INSPECCIÓN PRE-USO] F-07 28 TNS - Horómetro: 4890h - Estado: Aprobado Operativo",
+      "fecha": "2026-10-21 04:28 p. m.",
+      "remitente": "inspecciones@fjrepairs.com",
+      "cuerpo": "Se ha registrado una nueva inspección pre-operacional:\n• Equipo: F-07 28 TNS (Grúa Telescópica 28 TNS)\n• Proyecto: Proyecto Subestación 345KV Azua\n• Inspector/Operador: Frankely de Jesús Gil López\n• Horómetro actual: 4890 hrs (Restan 110 hrs para Mantenimiento Preventivo de 5000 hrs)\n• Resultado: Aprobado Operativo\n• Observaciones: Sin novedades\n• Hallazgos reportados: 0 elementos.\n\nLa inspección ha sido archivada automáticamente en la ficha técnica del equipo."
+    },
+    {
+      "id": "email-01",
+      "destinatario": "operaciones@fjrepairs.com",
+      "asunto": "[F&J REPAIRS] Registro de Inspección Pre-Uso: F-07 28 TNS (Azua 345KV)",
+      "fecha": "2026-10-21 07:16 AM",
+      "remitente": "sistema-flota@fjrepairs.com",
+      "cuerpo": "Se ha completado la Inspección Pre-Uso del equipo F-07 28 TNS.\nFecha: 21/10/2026 07:15 AM\nOperador: Carlos M. Santana\nHorómetro registrado: 4,875 Horas\nPróximo Mantenimiento Preventivo: Faltan 125 Horas (Meta: 5,000 hrs)\nResultado: Aprobado para operación en proyecto Subestación 345KV Azua.\nEvidencias fotográficas y lista de chequeo adjuntas en la bitácora del equipo."
+    }
+  ],
+  "checklistSecciones": [
+    {
+      "seccion": "1. Condiciones de Sitio y Datos Operacionales",
+      "icono": "🗺️",
+      "items": [
+        {
+          "id": "chk-01",
+          "pregunta": "Área de trabajo debidamente delimitada con conos y cinta de advertencia"
+        },
+        {
+          "id": "chk-02",
+          "pregunta": "Distancia mínima de seguridad a líneas eléctricas energizadas verificada (345KV / 138KV)"
+        },
+        {
+          "id": "chk-03",
+          "pregunta": "Nivelación y firmeza del terreno verificada previa al posicionamiento"
+        },
+        {
+          "id": "chk-04",
+          "pregunta": "Velocidad de viento dentro del rango seguro según anemómetro (< 32 km/h)"
+        },
+        {
+          "id": "chk-05",
+          "pregunta": "Plan de izaje (Rigging Plan) revisado y firmado por supervisor de maniobra"
+        }
+      ]
+    },
+    {
+      "seccion": "2. Sistema de Izaje, Pluma y Gancho",
+      "icono": "🏗️",
+      "items": [
+        {
+          "id": "chk-06",
+          "pregunta": "Cables de acero sin alambres rotos, deformaciones, cocas ni aplastamiento"
+        },
+        {
+          "id": "chk-07",
+          "pregunta": "Gancho de carga sin fisuras, rotación libre y pestillo de seguridad operable"
+        },
+        {
+          "id": "chk-08",
+          "pregunta": "Poleas de cabeza de pluma y de motón giran libremente sin desgaste irregular"
+        },
+        {
+          "id": "chk-09",
+          "pregunta": "Dispositivo Anti-Two-Block (A2B) fin de carrera probado y cortando movimiento"
+        },
+        {
+          "id": "chk-10",
+          "pregunta": "Secciones de pluma telescópica sin abolladuras, corrosión o desalineación"
+        },
+        {
+          "id": "chk-11",
+          "pregunta": "Winche principal y auxiliar con enrolle uniforme de cable en el tambor"
+        },
+        {
+          "id": "chk-12",
+          "pregunta": "Cilindro hidráulico de elevación de pluma sin fugas ni rayaduras en vástago"
+        }
+      ]
+    },
+    {
+      "seccion": "3. Motor, Transmisión y Fluidos",
+      "icono": "⚙️",
+      "items": [
+        {
+          "id": "chk-13",
+          "pregunta": "Nivel de aceite de motor verificado en varilla dentro del rango óptimo"
+        },
+        {
+          "id": "chk-14",
+          "pregunta": "Nivel de líquido refrigerante de radiador adecuado y sin pérdidas"
+        },
+        {
+          "id": "chk-15",
+          "pregunta": "Nivel de aceite hidráulico en mirilla de tanque principal dentro de marca"
+        },
+        {
+          "id": "chk-16",
+          "pregunta": "Combustible diesel suficiente para la jornada programada (> 70%)"
+        },
+        {
+          "id": "chk-17",
+          "pregunta": "Baterías limpias, bornes ajustados y sistema de carga alternador en orden"
+        },
+        {
+          "id": "chk-18",
+          "pregunta": "Ausencia total de fugas visibles de combustible, refrigerante o fluido hidráulico"
+        },
+        {
+          "id": "chk-19",
+          "pregunta": "Filtro de aire sin saturación excesiva ni indicador de restricción rojo"
+        }
+      ]
+    },
+    {
+      "seccion": "4. Estabilizadores (Outriggers) y Chasis",
+      "icono": "🚜",
+      "items": [
+        {
+          "id": "chk-20",
+          "pregunta": "Gatos estabilizadores extienden y retraen suavemente sin pérdidas de presión"
+        },
+        {
+          "id": "chk-21",
+          "pregunta": "Zapatas / pads de apoyo en buen estado con sus pasadores de retención"
+        },
+        {
+          "id": "chk-22",
+          "pregunta": "Uso obligatorio de almohadillas / tacos de madera o polietileno de alta densidad"
+        },
+        {
+          "id": "chk-23",
+          "pregunta": "Presión de inflado de neumáticos de traslado correcta y pernos apretados"
+        },
+        {
+          "id": "chk-24",
+          "pregunta": "Luces de freno, direccionales y faros de trabajo nocturno funcionando"
+        },
+        {
+          "id": "chk-25",
+          "pregunta": "Alarma de retroceso y bocina de advertencia operativas y audibles"
+        }
+      ]
+    },
+    {
+      "seccion": "5. Cabina, Instrumentos y Seguridad Operacional",
+      "icono": "🛡️",
+      "items": [
+        {
+          "id": "chk-26",
+          "pregunta": "Computadora LMI (Indicador de Momento de Carga) encendida y calibrada"
+        },
+        {
+          "id": "chk-27",
+          "pregunta": "Parada de emergencia (Emergency Stop) probada y restablecida"
+        },
+        {
+          "id": "chk-28",
+          "pregunta": "Mandos y joysticks vuelven automáticamente a neutro al soltarse"
+        },
+        {
+          "id": "chk-29",
+          "pregunta": "Extintor de incendios tipo PQS / CO2 de 20 lbs con manómetro en verde"
+        },
+        {
+          "id": "chk-30",
+          "pregunta": "Botiquín de primeros auxilios abastecido y linterna de emergencia"
+        },
+        {
+          "id": "chk-31",
+          "pregunta": "EPP completo del operador (Casco dieléctrico, chaleco reflectivo, botas dieléctricas)"
+        },
+        {
+          "id": "chk-32",
+          "pregunta": "Radio de comunicación portátil con baterías cargadas para señalero / rigger"
+        }
+      ]
+    }
+  ]
+}
