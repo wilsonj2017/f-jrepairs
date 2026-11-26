@@ -24,6 +24,7 @@ const App = (function () {
     signaturePadDrawing: false,
     signaturePadHasContent: false,
     currentFormView: null, // null | { type: 'maintenance'|'inspection'|'upload-doc'|'docs', equipoId }
+    selectedMaintenanceProgramId: 'pm-250',
     fleetStatusFilter: 'all',
     fleetSearchQuery: '',
     emailSearchQuery: '',
@@ -48,23 +49,245 @@ const App = (function () {
     }, 4000);
   }
 
-  // Load Initial Data from Server with LocalStorage Fallback
+  // =========================================================================
+  // DATOS DE RESPALDO GARANTIZADOS (PREVIENE PANTALLAS BLANCAS EN SERVIDORES ESTÁTICOS / NGINX)
+  // =========================================================================
+  const FALLBACK_DB_DATA = {
+    company: {
+      name: "F&J REPAIRS SRL",
+      rnc: "132-45892-1",
+      sector: "Instalación de Torres Eléctricas de Alta Tensión y Montaje de Subestaciones",
+      manager: "Frankely de Jesús Gil López",
+      managerRole: "Gerente Técnico & Operaciones",
+      executive: "Jonathan Gil",
+      executiveRole: "Gerencia General",
+      email: "operaciones@fjrepairs.com",
+      supportEmail: "contacto@fjrepairs.com",
+      phone: "+1 (809) 555-0192",
+      address: "Av. Luperón, Zona Industrial Herrera, Santo Domingo, R.D.",
+      website: "www.fjrepairs.com"
+    },
+    users: [
+      { id: "u1", username: "frankely.gil", name: "Frankely de Jesús Gil López", role: "Gerente Técnico / Encargado", email: "frankely.gil@fjrepairs.com" },
+      { id: "u2", username: "jonathan.gil", name: "Jonathan Gil", role: "Gerencia General", email: "jonathan.gil@fjrepairs.com" },
+      { id: "u3", username: "operador.azua", name: "Carlos M. Santana", role: "Operador Certificado Grúa", email: "csantana@fjrepairs.com" },
+      { id: "u4", username: "mantenimiento.taller", name: "Ramón Almonte", role: "Técnico Mecánico Hidráulico", email: "ralmonte@fjrepairs.com" }
+    ],
+    equipos: [
+      {
+        id: "F-07",
+        codigo: "F-07 28 TNS",
+        nombre: "Grúa Telescópica 28 TNS",
+        tipo: "Grúa sobre Camión",
+        capacidad: "28 Toneladas",
+        marca: "Terex / National Crane",
+        modelo: "Series 900A",
+        anio: 2021,
+        placa: "L-392811",
+        chasis: "3FDNF82X0MA194821",
+        proyecto: "Proyecto Subestación 345KV Azua",
+        ubicacion: "Azua de Compostela, R.D.",
+        estado: "Operativo",
+        horometroActual: 4890,
+        intervaloMantenimiento: 500,
+        ultimoMantenimientoHoras: 4890,
+        proximoMantenimientoHoras: 5390,
+        foto: "assets/crane_f07_28t.jpg",
+        encargadoAsignado: "Frankely de Jesús Gil López",
+        operadorAsignado: "Carlos M. Santana",
+        qrUrl: "?equipo=F-07"
+      },
+      {
+        id: "F-02",
+        codigo: "F-02 24 TNS",
+        nombre: "Grúa Camión 24 TNS",
+        tipo: "Grúa Montada en Camión",
+        capacidad: "24 Toneladas",
+        marca: "Manitowoc / Grove",
+        modelo: "TMS500E",
+        anio: 2019,
+        placa: "L-281903",
+        chasis: "1HTMNAAM8CH638192",
+        proyecto: "Línea de Transmisión 138KV Monte Plata",
+        ubicacion: "Monte Plata, R.D.",
+        estado: "Mantenimiento Próximo",
+        horometroActual: 3465,
+        intervaloMantenimiento: 250,
+        ultimoMantenimientoHoras: 3250,
+        proximoMantenimientoHoras: 3500,
+        foto: "assets/crane_f04_40t.jpg",
+        encargadoAsignado: "Frankely de Jesús Gil López",
+        operadorAsignado: "Manuel E. Rosario",
+        qrUrl: "?equipo=F-02"
+      },
+      {
+        id: "F-04",
+        codigo: "F-04 40 TNS",
+        nombre: "Grúa Todo Terreno 40 TNS",
+        tipo: "Grúa Telescópica All-Terrain",
+        capacidad: "40 Toneladas",
+        marca: "Liebherr",
+        modelo: "LTM 1040-2.1",
+        anio: 2022,
+        placa: "L-441029",
+        chasis: "W09104021NN019283",
+        proyecto: "Subestación Norte 138KV Santiago",
+        ubicacion: "Santiago de los Caballeros, R.D.",
+        estado: "Operativo",
+        horometroActual: 6120,
+        intervaloMantenimiento: 500,
+        ultimoMantenimientoHoras: 6000,
+        proximoMantenimientoHoras: 6500,
+        foto: "assets/crane_f04_40t.jpg",
+        encargadoAsignado: "Frankely de Jesús Gil López",
+        operadorAsignado: "Jorge L. Peña",
+        qrUrl: "?equipo=F-04"
+      },
+      {
+        id: "F-06",
+        codigo: "F-06 35 TNS",
+        nombre: "Grúa Móvil 35 TNS",
+        tipo: "Grúa Rough Terrain",
+        capacidad: "35 Toneladas",
+        marca: "Tadano",
+        modelo: "GR-350XL",
+        anio: 2020,
+        placa: "L-352018",
+        chasis: "TDN350X900281",
+        proyecto: "Línea de Interconexión Autopista Duarte",
+        ubicacion: "Bonao / Monseñor Nouel, R.D.",
+        estado: "Operativo",
+        horometroActual: 2780,
+        intervaloMantenimiento: 250,
+        ultimoMantenimientoHoras: 2750,
+        proximoMantenimientoHoras: 3000,
+        foto: "assets/crane_f07_28t.jpg",
+        encargadoAsignado: "Frankely de Jesús Gil López",
+        operadorAsignado: "Pedro J. Martínez",
+        qrUrl: "?equipo=F-06"
+      },
+      {
+        id: "F-01",
+        codigo: "F-01 18 TNS",
+        nombre: "Camión Grúa Canasta 18 TNS",
+        tipo: "Camión con Brazo Articulado y Cesta Dieléctrica",
+        capacidad: "18 Toneladas / Altura 26m",
+        marca: "Freightliner / Palfinger",
+        modelo: "PK 23500 Performance",
+        anio: 2018,
+        placa: "L-180042",
+        chasis: "1FVACWDC9HH491023",
+        proyecto: "Taller Central & Mantenimiento Flota",
+        ubicacion: "Santo Domingo Oeste, R.D.",
+        estado: "Mantenimiento Vencido",
+        horometroActual: 2005,
+        intervaloMantenimiento: 250,
+        ultimoMantenimientoHoras: 1750,
+        proximoMantenimientoHoras: 2000,
+        foto: "assets/repuesto_referencia.jpg",
+        encargadoAsignado: "Frankely de Jesús Gil López",
+        operadorAsignado: "Ramón Almonte",
+        qrUrl: "?equipo=F-01"
+      }
+    ],
+    checklistSecciones: [
+      {
+        seccion: "1. Condiciones de Sitio y Operación",
+        icono: "🗺️",
+        items: [
+          { id: "chk-01", pregunta: "Área de trabajo delimitada con conos y cinta de advertencia" },
+          { id: "chk-02", pregunta: "Distancia mínima de seguridad a líneas energizadas verificada" },
+          { id: "chk-03", pregunta: "Terreno nivelado y almohadillas de estabilizadores colocadas" }
+        ]
+      },
+      {
+        seccion: "2. Niveles de Fluidos y Motor Diesel",
+        icono: "🛢️",
+        items: [
+          { id: "chk-04", pregunta: "Nivel de aceite de motor y refrigerante en rango adecuado" },
+          { id: "chk-05", pregunta: "Nivel de aceite hidráulico en visor del depósito principal" },
+          { id: "chk-06", pregunta: "Purga de agua en filtro separador de combustible realizada" }
+        ]
+      },
+      {
+        seccion: "3. Sistema Hidráulico, Pluma y Estabilizadores",
+        icono: "🏗️",
+        items: [
+          { id: "chk-07", pregunta: "Cilindros estabilizadores sin fuga ni deformación física" },
+          { id: "chk-08", pregunta: "Mangueras y acoples hidráulicos de pluma sin fugas de presión" },
+          { id: "chk-09", pregunta: "Cable de acero de izaje sin alambres rotos ni aplastamiento (ISO 4309)" }
+        ]
+      },
+      {
+        seccion: "4. Dispositivos de Seguridad y Computadora LMI",
+        icono: "⚠️",
+        items: [
+          { id: "chk-10", pregunta: "Interruptor de final de carrera Anti-Two Block (A2B) operativo" },
+          { id: "chk-11", pregunta: "Indicador de Momento de Carga (LMI) encendido y calibrado" },
+          { id: "chk-12", pregunta: "Pestillo de seguridad del gancho principal en buen estado" }
+        ]
+      }
+    ]
+  };
+
+  // Load Initial Data with Multi-Tier Fallback (API -> static db.json -> localStorage -> Fallback)
   async function loadData() {
+    let loaded = false;
+
+    // TIER 1: Try Node.js Backend API
     try {
       const response = await fetch('/api/data');
       if (response.ok) {
         const data = await response.json();
-        populateState(data);
-        localStorage.setItem('fj_repairs_data', JSON.stringify(data));
-      } else {
-        throw new Error('Server returned ' + response.status);
+        if (data && Array.isArray(data.equipos) && data.equipos.length > 0) {
+          populateState(data);
+          localStorage.setItem('fj_repairs_data', JSON.stringify(data));
+          loaded = true;
+        }
       }
     } catch (err) {
-      console.warn('Loading cached data from localStorage:', err);
+      console.warn('Backend API /api/data not reached, trying static file fallback...');
+    }
+
+    // TIER 2: If API is not available (e.g. running under static Nginx or CDN), fetch static data/db.json
+    if (!loaded) {
+      try {
+        const response = await fetch('data/db.json');
+        if (response.ok) {
+          const data = await response.json();
+          if (data && Array.isArray(data.equipos) && data.equipos.length > 0) {
+            populateState(data);
+            localStorage.setItem('fj_repairs_data', JSON.stringify(data));
+            loaded = true;
+            console.log('Successfully loaded initial data from static data/db.json (Nginx fallback)');
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load static data/db.json:', err);
+      }
+    }
+
+    // TIER 3: Fallback to cached LocalStorage data if server/static fetch failed
+    if (!loaded) {
       const cached = localStorage.getItem('fj_repairs_data');
       if (cached) {
-        populateState(JSON.parse(cached));
+        try {
+          const data = JSON.parse(cached);
+          if (data && Array.isArray(data.equipos) && data.equipos.length > 0) {
+            populateState(data);
+            loaded = true;
+            console.log('Loaded data from localStorage cache');
+          }
+        } catch (e) {
+          console.warn('Corrupt cached data');
+        }
       }
+    }
+
+    // TIER 4: Guaranteed in-memory fallback so app NEVER crashes with a blank screen
+    if (!loaded || !state.equipos || state.equipos.length === 0) {
+      console.log('Applying embedded fallback fleet data');
+      populateState(FALLBACK_DB_DATA);
     }
 
     // Detect mobile page context (mobile.html or /mobile)
@@ -100,20 +323,24 @@ const App = (function () {
   }
 
   function populateState(data) {
-    state.company = data.company || {};
-    state.users = data.users || [];
-    state.equipos = data.equipos || [];
-    state.documentos = data.documentos || [];
-    state.repuestosSuplidores = data.repuestosSuplidores || [];
-    state.solicitudesDocumentos = data.solicitudesDocumentos || [];
-    state.mantenimientos = data.mantenimientos || [];
-    state.inspecciones = data.inspecciones || [];
-    state.correosEnviados = data.correosEnviados || [];
-    state.checklistSecciones = data.checklistSecciones || [];
+    if (!data) return;
+    state.company = data.company || state.company || FALLBACK_DB_DATA.company;
+    state.users = (data.users && data.users.length > 0) ? data.users : (state.users && state.users.length > 0 ? state.users : FALLBACK_DB_DATA.users);
+    state.equipos = (data.equipos && data.equipos.length > 0) ? data.equipos : (state.equipos && state.equipos.length > 0 ? state.equipos : FALLBACK_DB_DATA.equipos);
+    state.documentos = data.documentos || state.documentos || [];
+    state.repuestosSuplidores = data.repuestosSuplidores || state.repuestosSuplidores || [];
+    state.solicitudesDocumentos = data.solicitudesDocumentos || state.solicitudesDocumentos || [];
+    state.mantenimientos = data.mantenimientos || state.mantenimientos || [];
+    state.inspecciones = data.inspecciones || state.inspecciones || [];
+    state.correosEnviados = data.correosEnviados || state.correosEnviados || [];
+    state.checklistSecciones = (data.checklistSecciones && data.checklistSecciones.length > 0) ? data.checklistSecciones : FALLBACK_DB_DATA.checklistSecciones;
   }
 
   function getSelectedEquipo() {
-    return state.equipos.find(e => e.id === state.selectedEquipoId) || state.equipos[0];
+    if (!state.equipos || state.equipos.length === 0) {
+      return FALLBACK_DB_DATA.equipos[0];
+    }
+    return state.equipos.find(e => e.id === state.selectedEquipoId) || state.equipos[0] || FALLBACK_DB_DATA.equipos[0];
   }
 
   // Master Render Function
@@ -126,7 +353,9 @@ const App = (function () {
 
     if (state.currentFormView) {
       if (state.currentFormView.type === 'maintenance') {
-        renderInPageMaintenanceForm(state.currentFormView.equipoId);
+        renderInPageMaintenanceForm(state.currentFormView.equipoId, state.currentFormView.programaId);
+      } else if (state.currentFormView.type === 'maintenance-programs') {
+        renderInPageMaintenanceProgramsCatalog(state.currentFormView.equipoId);
       } else if (state.currentFormView.type === 'inspection') {
         renderInPageInspectionForm(state.currentFormView.equipoId);
       } else if (state.currentFormView.type === 'upload-doc') {
@@ -360,7 +589,19 @@ const App = (function () {
           </div>
           <div class="module-info">
             <h3>3. Documentar Mantenimiento</h3>
-            <p>Preventivo/Correctivo, costos, suplidores, factura y carga a Bitácora 1.</p>
+            <p>Formulario con programas PM (250h, 500h, 1000h, 2000h) y correctivos.</p>
+          </div>
+          <span class="module-arrow">›</span>
+        </button>
+
+        <!-- Module 4: Catálogo de Programas Técnicos -->
+        <button class="module-card-btn btn-prog-mant" onclick="App.openMaintenanceProgramsView('${equipo.id}')">
+          <div class="module-icon-circle icon-prog-mant">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          </div>
+          <div class="module-info">
+            <h3>4. Programas Técnicos de Flota</h3>
+            <p>Protocolos estandarizados de fabricante OEM, repuestos y costos estimados.</p>
           </div>
           <span class="module-arrow">›</span>
         </button>
@@ -465,6 +706,10 @@ const App = (function () {
             <button class="btn-infotep-submit" onclick="App.openModuleMaintenance()" style="margin:0; height:40px;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
               <span>+ Registrar Mantenimiento</span>
+            </button>
+            <button class="btn-infotep-cancel" onclick="App.openMaintenanceProgramsView()" style="margin:0; height:40px; display:inline-flex; align-items:center; gap:6px; color:#002b66; font-weight:700;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              <span>Programas PM</span>
             </button>
             <button class="btn-infotep-cancel" onclick="App.openModuleInspection()" style="margin:0; height:40px; display:inline-flex; align-items:center; gap:6px; color:#002b66; font-weight:700;">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -724,13 +969,14 @@ const App = (function () {
     const topLabel = document.getElementById('top-bar-page-label');
     const navFlota = document.getElementById('nav-item-flota');
     const navMant = document.getElementById('nav-item-mantenimiento');
+    const navProgMant = document.getElementById('nav-item-programas-mant');
     const navInsp = document.getElementById('nav-item-inspeccion');
     const navDocs = document.getElementById('nav-item-docs');
     const navQR = document.getElementById('nav-item-qr');
     const navPrintQR = document.getElementById('nav-item-print-qr');
     const navEmails = document.getElementById('nav-item-emails');
 
-    [navFlota, navMant, navInsp, navDocs, navQR, navPrintQR, navEmails].forEach(el => el && el.classList.remove('active'));
+    [navFlota, navMant, navProgMant, navInsp, navDocs, navQR, navPrintQR, navEmails].forEach(el => el && el.classList.remove('active'));
 
     if (!state.currentFormView) {
       if (topLabel) topLabel.textContent = 'Consultar Flota de Grúas';
@@ -738,6 +984,9 @@ const App = (function () {
     } else if (state.currentFormView.type === 'maintenance') {
       if (topLabel) topLabel.textContent = 'Registrar Mantenimiento';
       if (navMant) navMant.classList.add('active');
+    } else if (state.currentFormView.type === 'maintenance-programs') {
+      if (topLabel) topLabel.textContent = 'Programas de Mantenimiento Estandarizados';
+      if (navProgMant) navProgMant.classList.add('active');
     } else if (state.currentFormView.type === 'inspection') {
       if (topLabel) topLabel.textContent = 'Nueva Inspección Pre-Uso';
       if (navInsp) navInsp.classList.add('active');
@@ -816,9 +1065,135 @@ const App = (function () {
   }
 
   // =========================================================================
-  // IN-PAGE INFOTEP FORM: REGISTRO DE MANTENIMIENTO
+  // CATÁLOGO MAESTRO DE PROGRAMAS DE MANTENIMIENTO TÉCNICO (OEM STANDARDS)
   // =========================================================================
-  function renderInPageMaintenanceForm(equipoId) {
+  const MAINTENANCE_PROGRAMS = [
+    {
+      id: 'pm-250',
+      codigo: 'PM-1',
+      badgeClass: 'badge-pm-250',
+      color: '#059669',
+      nombre: 'Programa 250 Horas (PM-1 Básico)',
+      intervaloHoras: 250,
+      nivel: 'Servicio Básico / Rutinario',
+      descripcionCorta: 'Servicio ligero regular: drenaje de aceite de motor y filtro de flujo pleno, filtro primario de combustible con separador de agua, engrase general de articulaciones, purga neumática e inspección de fugas.',
+      piezasSugeridas: 'Filtro Aceite Motor Cat 1R-1808 (1 ud), Filtro Combustible/Agua Cat 1R-0770 (1 ud), Aceite Motor Chevron Delo 400 15W-40 (8 galones), Grasa Litio EP-2 Chevron Ultra-Duty (2 tubos)',
+      suplidorSugerido: 'Distribuidora Corripio Industrial / Santo Domingo Motors',
+      costoManoObra: 9500,
+      costoRepuestos: 14200,
+      tareas: [
+        { id: 't250-1', subsistema: 'Motor Diesel', tarea: 'Drenaje y reemplazo de aceite de motor diesel 15W-40 y filtro de flujo pleno.' },
+        { id: 't250-2', subsistema: 'Combustible', tarea: 'Cambio de filtro primario de combustible y purga de vaso sedimentador / trampa de agua.' },
+        { id: 't250-3', subsistema: 'Chasis & Pluma', tarea: 'Engrase manual a presión de todos los puntos de lubricación (pluma, estabilizadores, cilindros de levante).' },
+        { id: 't250-4', subsistema: 'Fluidos', tarea: 'Inspección y nivelación de fluidos: refrigerante, transmisión Powershift y dirección hidráulica.' },
+        { id: 't250-5', subsistema: 'Neumático', tarea: 'Purga de humedad y condensación en calderines y tanques de aire comprimido.' },
+        { id: 't250-6', subsistema: 'Hidráulica', tarea: 'Inspección visual de fugas en mangueras, racores y cilindros hidráulicos de alta presión.' },
+        { id: 't250-7', subsistema: 'Motor Diesel', tarea: 'Verificación de tensión y estado físico de correas de alternador, ventilador y compresor.' },
+        { id: 't250-8', subsistema: 'Operacional', tarea: 'Prueba de arranque, comprobación de presión de aceite y verificación de códigos de falla en cabina.' }
+      ]
+    },
+    {
+      id: 'pm-500',
+      codigo: 'PM-2',
+      badgeClass: 'badge-pm-500',
+      color: '#0284c7',
+      nombre: 'Programa 500 Horas (PM-2 Intermedio)',
+      intervaloHoras: 500,
+      nivel: 'Servicio Intermedio / Integral',
+      descripcionCorta: 'Servicio integral: incluye todas las tareas de 250h más cambio de filtros de aire, combustible secundario (2 micras), filtro retorno hidráulico HF-6510, zapatas de desgaste de pluma y prueba de baterías de 24V.',
+      piezasSugeridas: 'Kit Filtros Motor & Aire Donaldson P181054 / P119374, Filtro Combustible Secundario Cat 1R-0749 (2 micras), Filtro Retorno Hidráulico Fleetguard HF-6510, Filtro Respirador Tanque Hidráulico, Aceite 15W-40 (8 gal), Grasa de Grafito / Moly para pluma (2 gal)',
+      suplidorSugerido: 'Repuestos Hidráulicos del Caribe SRL / Santo Domingo Motors',
+      costoManoObra: 15000,
+      costoRepuestos: 26800,
+      tareas: [
+        { id: 't500-1', subsistema: 'General', tarea: 'Ejecución integral de todas las tareas del Programa PM-1 (250 horas).' },
+        { id: 't500-2', subsistema: 'Admisión Motor', tarea: 'Reemplazo de filtros de aire de motor (elemento primario exterior y de seguridad interior).' },
+        { id: 't500-3', subsistema: 'Combustible', tarea: 'Reemplazo de filtro secundario de combustible de alta eficiencia (2 micras) y purga de riel común.' },
+        { id: 't500-4', subsistema: 'Hidráulica', tarea: 'Reemplazo de elemento filtrante del retorno hidráulico principal HF-6510 y filtro respirador del depósito.' },
+        { id: 't500-5', subsistema: 'Pluma Telescópica', tarea: 'Limpieza, ajuste y lubricación con pasta de grafito en zapatas de desgaste (wear pads) de secciones de pluma.' },
+        { id: 't500-6', subsistema: 'Cables & Malacates', tarea: 'Inspección de cables de extensión y retracción de pluma telescópica (tensión, deformación, hilos rotos).' },
+        { id: 't500-7', subsistema: 'Sistema Eléctrico', tarea: 'Prueba de densidad de electrolito en baterías 24V, limpieza de bornes y medición de voltaje del alternador (27.5V - 28.5V).' },
+        { id: 't500-8', subsistema: 'Frenos & Rodaje', tarea: 'Inspección de carrera de cilindros de freno, desgaste de zapatas/pastillas y prueba de hermeticidad de aire.' }
+      ]
+    },
+    {
+      id: 'pm-1000',
+      codigo: 'PM-3',
+      badgeClass: 'badge-pm-1000',
+      color: '#7c3aed',
+      nombre: 'Programa 1,000 Horas (PM-3 Mayor / Anual)',
+      intervaloHoras: 1000,
+      nivel: 'Servicio Mayor / Certificado Anual',
+      descripcionCorta: 'Servicio mayor anual de tren motriz y estructura: fluido y filtros de transmisión Powershift, diferenciales y cubos planetarios (85W-140), torque de pernos de corona de giro y calibración de válvulas y sensores LMI/A2B.',
+      piezasSugeridas: 'Filtro y Aceite Transmisión ATF Allison C-4 (12 galones), Aceite Engranajes SAE 85W-140 API GL-5 (10 galones para diferenciales y mandos finales planetarios), Filtro Presión Hidráulica P164378 (2 uds), Empacadura Tapa Válvulas, Sellos O-Ring tapones magnéticos',
+      suplidorSugerido: 'Distribuidora Corripio Industrial / Santo Domingo Motors',
+      costoManoObra: 28000,
+      costoRepuestos: 58500,
+      tareas: [
+        { id: 't1000-1', subsistema: 'General', tarea: 'Ejecución integral de todas las tareas de los Programas PM-1 (250h) y PM-2 (500h).' },
+        { id: 't1000-2', subsistema: 'Transmisión', tarea: 'Drenaje, limpieza de tapones magnéticos y cambio de aceite en transmisión Powershift con cambio de filtro.' },
+        { id: 't1000-3', subsistema: 'Tren Motriz', tarea: 'Reemplazo de aceite SAE 85W-140 en diferencial delantero, trasero y los 4 cubos planetarios de rueda.' },
+        { id: 't1000-4', subsistema: 'Corona de Giro', tarea: 'Drenaje y reemplazo de aceite en reductora de giro (swing gearbox) y engrase de corona dentada.' },
+        { id: 't1000-5', subsistema: 'Estructura Tornamesa', tarea: 'Verificación de torque con torquímetro calibrado en pernos de corona de giro (grado 10.9/12.9).' },
+        { id: 't1000-6', subsistema: 'Hidráulica de Presión', tarea: 'Reemplazo de filtros hidráulicos de alta presión (línea de salida de bomba principal y pilotaje).' },
+        { id: 't1000-7', subsistema: 'Motor Diesel', tarea: 'Calibración de holgura de válvulas de admisión/escape e inyectores mecánicos/electrónicos del motor.' },
+        { id: 't1000-8', subsistema: 'Seguridad LMI / A2B', tarea: 'Calibración y prueba funcional del sistema LMI / Indicador de Momento de Carga y switch Anti-Two Block (A2B).' }
+      ]
+    },
+    {
+      id: 'pm-2000',
+      codigo: 'PM-4',
+      badgeClass: 'badge-pm-2000',
+      color: '#dc2626',
+      nombre: 'Programa 2,000 Horas (PM-4 Overhaul de Fluidos Totales)',
+      intervaloHoras: 2000,
+      nivel: 'Overhaul de Fluidos & Certificación Estructural',
+      descripcionCorta: 'Overhaul integral y certificación: reemplazo de 110 gal de aceite hidráulico ISO VG 46, enjuague químico de refrigerante ELC con termostatos, inspección ISO 4309 de cables de acero, ensayos NDT en gancho/pluma y prueba de carga.',
+      piezasSugeridas: 'Aceite Hidráulico Antidesgaste ISO VG 46 (2 tambores / 110 galones), Refrigerante Heavy Duty Extended Life Coolant 50/50 (14 galones), Kit Termostatos Cat y sellos de bomba de agua, Cable de acero antigiratorio 19x7 o 35x7 (150 m si aplica reemplazo), Kit filtros totales',
+      suplidorSugerido: 'Repuestos Hidráulicos del Caribe / Distribuidora Corripio Industrial',
+      costoManoObra: 48000,
+      costoRepuestos: 145000,
+      tareas: [
+        { id: 't2000-1', subsistema: 'General', tarea: 'Ejecución integral de todas las tareas de los Programas PM-1 (250h), PM-2 (500h) y PM-3 (1,000h).' },
+        { id: 't2000-2', subsistema: 'Sistema Hidráulico', tarea: 'Drenaje completo, enjuague químico del depósito y llenado de 110 galones de aceite hidráulico ISO VG 46 nuevo.' },
+        { id: 't2000-3', subsistema: 'Refrigeración Motor', tarea: 'Drenaje y lavado químico del radiador; reemplazo de termostatos, mangueras de agua y refrigerante ELC 50/50.' },
+        { id: 't2000-4', subsistema: 'Cables de Izaje', tarea: 'Inspección profunda de cables de izaje principal y auxiliar bajo norma ISO 4309 (descarte por rotura o aplastamiento).' },
+        { id: 't2000-5', subsistema: 'Cilindros Hidráulicos', tarea: 'Prueba de retención y deriva hidráulica (drift test) en cilindros de levante de pluma y cilindros estabilizadores.' },
+        { id: 't2000-6', subsistema: 'Ensayos NDT', tarea: 'Inspección no destructiva (NDT) por partículas magnéticas o tintas penetrantes en gancho de carga y cuello.' },
+        { id: 't2000-7', subsistema: 'Estructura & Soldaduras', tarea: 'Inspección de soldaduras estructurales en tornamesa, soporte de pluma (pivot pin) y vigas estabilizadoras.' },
+        { id: 't2000-8', subsistema: 'Certificación de Carga', tarea: 'Prueba dinámica de izaje con carga certificada y verificación de curvas de carga en computadora LMI.' }
+      ]
+    },
+    {
+      id: 'correctivo',
+      codigo: 'Avería',
+      badgeClass: 'badge-pm-corr',
+      color: '#d97706',
+      nombre: 'Mantenimiento Correctivo / Reparación de Avería',
+      intervaloHoras: 0,
+      nivel: 'Atención Correctiva Imprevista',
+      descripcionCorta: 'Atención técnica a fallas imprevistas: diagnóstico hidráulico/mecánico, despresurización LOTO, reemplazo de componentes averiados, prensado de mangueras de 4 mallas, sellos y prueba de funcionamiento bajo carga.',
+      piezasSugeridas: 'Kit de Sellos Hidráulicos Parker/Hallite, Mangueras de alta presión 4 mallas SAE 100R12 con terminales JIC/BSP, Válvula de contrabalance o componente específico averiado',
+      suplidorSugerido: 'Mangueras y Conexiones Dominicana (MANCODOM) / Hydraulic Seals & Gaskets RD',
+      costoManoObra: 18500,
+      costoRepuestos: 32000,
+      tareas: [
+        { id: 'tcorr-1', subsistema: 'Diagnóstico', tarea: 'Diagnóstico de falla con manómetros / escáner electrónico y aislamiento del subsistema afectado.' },
+        { id: 'tcorr-2', subsistema: 'Seguridad LOTO', tarea: 'Despresurización segura del circuito hidráulico y bloqueo/etiquetado de energía (LOTO).' },
+        { id: 'tcorr-3', subsistema: 'Desmontaje', tarea: 'Desmontaje cuidadoso del componente averiado y evaluación de causa raíz (desgaste, contaminación, fatiga).' },
+        { id: 'tcorr-4', subsistema: 'Limpieza Circuito', tarea: 'Limpieza minuciosa de tuberías, fitting y verificación de no presencia de virutas metálicas en el circuito.' },
+        { id: 'tcorr-5', subsistema: 'Instalación', tarea: 'Instalación de componente nuevo o rectificado con empaquetaduras y O-rings de vitón/nitrilo nuevos.' },
+        { id: 'tcorr-6', subsistema: 'Torque & Purga', tarea: 'Purga de aire en líneas hidráulicas y verificación de torques de apriete según manual de taller del fabricante.' },
+        { id: 'tcorr-7', subsistema: 'Regulación de Presión', tarea: 'Ajuste y calibración de válvulas de alivio o presiones de trabajo con manómetro certificado.' },
+        { id: 'tcorr-8', subsistema: 'Prueba Operacional', tarea: 'Prueba funcional en vacío y bajo ciclo operativo real con carga antes de liberar la grúa al proyecto.' }
+      ]
+    }
+  ];
+
+  // =========================================================================
+  // IN-PAGE INFOTEP VIEW: CATÁLOGO DE PROGRAMAS DE MANTENIMIENTO
+  // =========================================================================
+  function renderInPageMaintenanceProgramsCatalog(equipoId) {
     const equipo = state.equipos.find(e => e.id === equipoId) || getSelectedEquipo();
     const mainCanvas = document.getElementById('app-main-content');
     if (!mainCanvas) return;
@@ -826,7 +1201,170 @@ const App = (function () {
     mainCanvas.innerHTML = `
       <div class="infotep-form-page-header">
         <div class="infotep-header-nav-row">
-          <button class="btn-infotep-back" onclick="App.returnToDashboard()" title="Volver a la lista">
+          <button class="btn-infotep-back" onclick="App.returnToDashboard()" title="Volver a la lista de grúas">
+            <span class="btn-back-circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M15 19l-7-7 7-7"/>
+              </svg>
+            </span>
+            <span class="btn-back-text">Volver a Flota</span>
+          </button>
+          <div class="infotep-header-badge">
+            <span class="badge-unit-code">🏗️ ${equipo.codigo}</span>
+            ${renderUnitStateBadge(equipo.estado)}
+          </div>
+        </div>
+        <div class="infotep-header-title-block">
+          <h2 class="infotep-page-title">Programas de Mantenimiento Estandarizados</h2>
+          <div class="infotep-page-subtitle">Especificaciones técnicas OEM de fabricante (Grove, Tadano, Liebherr, Manitowoc) para la flota de grúas de F&J Repairs SRL</div>
+        </div>
+      </div>
+
+      <!-- Selector rápido de unidad -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 16px; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.1rem;">⚙️</span>
+          <span style="font-weight:700; color:#002b66; font-size:0.88rem;">Unidad Seleccionada:</span>
+          <strong style="color:#0284c7;">${equipo.codigo} - ${equipo.nombre}</strong>
+          <span style="font-size:0.8rem; color:#64748b;">(${equipo.horometroActual} hrs actuales)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label style="font-size:0.8rem; font-weight:600; color:#475569;">Cambiar Unidad:</label>
+          <select class="form-select" style="width:auto; height:34px; font-size:0.8rem; padding:4px 8px;" onchange="App.selectEquipo(this.value); App.openMaintenanceProgramsView(this.value)">
+            ${state.equipos.map(e => `
+              <option value="${e.id}" ${e.id === equipo.id ? 'selected' : ''}>
+                ${e.codigo} - ${e.nombre}
+              </option>
+            `).join('')}
+          </select>
+        </div>
+      </div>
+
+      <!-- Grid de Programas de Mantenimiento -->
+      <div class="program-catalog-grid">
+        ${MAINTENANCE_PROGRAMS.map(prog => {
+          const totalCost = prog.costoManoObra + prog.costoRepuestos;
+          const isCorr = prog.id === 'correctivo';
+          const nextHoroCalc = isCorr ? equipo.proximoMantenimientoHoras : equipo.horometroActual + prog.intervaloHoras;
+
+          return `
+            <div class="program-catalog-card ${prog.badgeClass}" style="border-top: 4px solid ${prog.color};">
+              <div class="program-catalog-header">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px;">
+                  <span class="program-badge-pill" style="background:${prog.color}; color:#ffffff; font-weight:800; font-size:0.75rem; padding:4px 10px; border-radius:20px;">
+                    ${prog.codigo}
+                  </span>
+                  <span style="font-size:0.75rem; font-weight:700; color:#475569; background:#f1f5f9; padding:4px 8px; border-radius:4px;">
+                    ${prog.intervaloHoras ? `⏱️ Cada ${prog.intervaloHoras} hrs` : '⚠️ A Demanda'}
+                  </span>
+                </div>
+                <h3 style="font-size:1.05rem; font-weight:800; color:#002b66; margin:0 0 4px 0;">
+                  ${prog.nombre}
+                </h3>
+                <div style="font-size:0.75rem; font-weight:600; color:${prog.color}; margin-bottom:8px;">
+                  ${prog.nivel}
+                </div>
+                <p style="font-size:0.8rem; color:#475569; margin:0; line-height:1.45;">
+                  ${prog.descripcionCorta}
+                </p>
+              </div>
+
+              <div class="program-catalog-body">
+                <!-- Horómetro proyectado -->
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:8px 12px; margin-bottom:12px; font-size:0.78rem;">
+                  <span style="color:#64748b;">Próximo hito proyectado en ${equipo.codigo}:</span>
+                  <strong style="color:#002b66; display:block; font-size:0.88rem; margin-top:2px;">
+                    ${nextHoroCalc} hrs ${!isCorr ? `(+${prog.intervaloHoras} hrs)` : '(Preserva preventivo)'}
+                  </strong>
+                </div>
+
+                <!-- Repuestos sugeridos -->
+                <div style="margin-bottom:12px;">
+                  <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">
+                    📦 Repuestos & Fluidos Clave:
+                  </div>
+                  <div style="font-size:0.78rem; color:#1e293b; background:#f1f5f9; padding:6px 10px; border-radius:6px; line-height:1.4;">
+                    ${prog.piezasSugeridas}
+                  </div>
+                  <div style="font-size:0.72rem; color:#64748b; margin-top:4px;">
+                    Suplidor en RD: <strong>${prog.suplidorSugerido.split(' / ')[0]}</strong>
+                  </div>
+                </div>
+
+                <!-- Costos estimados -->
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; padding:8px 12px; margin-bottom:14px;">
+                  <div>
+                    <span style="font-size:0.7rem; color:#065f46; font-weight:600; display:block;">Costo Estimado (M.O. + Repuestos):</span>
+                    <strong style="font-size:0.95rem; color:#047857; font-weight:800;">
+                      RD$ ${totalCost.toLocaleString('es-DO', { minimumFractionDigits: 2 })}
+                    </strong>
+                  </div>
+                  <div style="text-align:right; font-size:0.7rem; color:#065f46;">
+                    <div>M.O: RD$ ${prog.costoManoObra.toLocaleString()}</div>
+                    <div>Rep: RD$ ${prog.costoRepuestos.toLocaleString()}</div>
+                  </div>
+                </div>
+
+                <!-- Checklist tareas preview -->
+                <div>
+                  <div style="font-size:0.72rem; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+                    ✓ Protocolo Técnico (${prog.tareas.length} Tareas Específicas):
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; padding-right:4px;">
+                    ${prog.tareas.map((t, idx) => `
+                      <div style="display:flex; align-items:flex-start; gap:6px; font-size:0.74rem; color:#334155; line-height:1.35; padding:4px 0; border-bottom:1px solid #f1f5f9;">
+                        <span style="font-weight:700; color:${prog.color}; font-size:0.7rem; flex-shrink:0;">${idx+1}.</span>
+                        <div style="flex:1;">
+                          <span class="task-subsystem-badge" style="font-size:0.65rem; padding:1px 5px; border-radius:3px; background:#e2e8f0; color:#334155; font-weight:600; margin-right:4px;">
+                            ${t.subsistema}
+                          </span>
+                          <span>${t.tarea}</span>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+
+              <div class="program-catalog-footer">
+                <button type="button" class="btn-start-program" style="background:${prog.color};" onclick="App.openMaintenanceWithProgram('${prog.id}', '${equipo.id}')">
+                  <span>🛠️ Iniciar Formulario (${prog.codigo})</span>
+                  <span style="font-size:1.1rem; line-height:1;">›</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    setTimeout(() => enhanceAllSelects(), 20);
+  }
+
+  // =========================================================================
+  // IN-PAGE INFOTEP FORM: REGISTRO DE MANTENIMIENTO POR PROGRAMA
+  // =========================================================================
+  function renderInPageMaintenanceForm(equipoId, programaId) {
+    const equipo = state.equipos.find(e => e.id === equipoId) || getSelectedEquipo();
+    const activeProgId = programaId || state.selectedMaintenanceProgramId || 'pm-250';
+    state.selectedMaintenanceProgramId = activeProgId;
+    const activeProg = MAINTENANCE_PROGRAMS.find(p => p.id === activeProgId) || MAINTENANCE_PROGRAMS[0];
+    const isCorrectivo = activeProg.id === 'correctivo';
+    const mainCanvas = document.getElementById('app-main-content');
+    if (!mainCanvas) return;
+
+    // Calculate target next horometer based on current equipment horometer
+    const currentHoro = equipo.horometroActual || 4890;
+    const nextHoroCalc = isCorrectivo 
+      ? `${equipo.proximoMantenimientoHoras} hrs (Preserva intervalo estándar)` 
+      : `${currentHoro + activeProg.intervaloHoras} hrs (+${activeProg.intervaloHoras} hrs según ${activeProg.codigo})`;
+
+    const totalEstCost = activeProg.costoManoObra + activeProg.costoRepuestos;
+
+    mainCanvas.innerHTML = `
+      <div class="infotep-form-page-header">
+        <div class="infotep-header-nav-row">
+          <button class="btn-infotep-back" onclick="App.returnToDashboard()" title="Volver a la lista de grúas">
             <span class="btn-back-circle">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M15 19l-7-7 7-7"/>
@@ -841,12 +1379,44 @@ const App = (function () {
         </div>
         <div class="infotep-header-title-block">
           <h2 class="infotep-page-title">Registrar Mantenimiento de Flota</h2>
-          <div class="infotep-page-subtitle">Gestión y control de servicios mecánicos, repuestos y costos por unidad</div>
+          <div class="infotep-page-subtitle">Formulario especializado por programa técnico (250h, 500h, 1000h, 2000h y correctivo) con piezas OEM y control de costos</div>
+        </div>
+      </div>
+
+      <!-- SELECTOR INTERACTIVO DE PROGRAMAS DE MANTENIMIENTO -->
+      <div class="maintenance-program-tabs-container">
+        <div class="maintenance-program-tabs-title">
+          <span>📋 SELECCIONE EL PROGRAMA DE MANTENIMIENTO TÉCNICO:</span>
+        </div>
+        <div class="maintenance-program-tabs">
+          ${MAINTENANCE_PROGRAMS.map(prog => `
+            <button type="button" 
+              class="program-tab-btn ${prog.id === activeProg.id ? 'active' : ''} ${prog.badgeClass}" 
+              onclick="App.selectMaintenanceProgram('${prog.id}', '${equipo.id}')">
+              <span class="program-tab-code">${prog.codigo}</span>
+              <span class="program-tab-name">${prog.nombre.split(' (')[0]}</span>
+              <span class="program-tab-hrs">${prog.intervaloHoras ? `${prog.intervaloHoras} hrs` : 'Avería'}</span>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- BANNER EXPLICATIVO DEL PROGRAMA ACTIVO -->
+      <div class="program-banner-summary" style="border-left-color: ${activeProg.color};">
+        <div class="program-banner-title">
+          <span class="program-banner-badge" style="background:${activeProg.color};">${activeProg.codigo}</span>
+          <strong style="color:#002b66; font-size:1rem;">${activeProg.nombre}</strong>
+          <span class="program-banner-level" style="color:${activeProg.color};">• ${activeProg.nivel}</span>
+        </div>
+        <div class="program-banner-desc">
+          ${activeProg.descripcionCorta}
         </div>
       </div>
 
       <div class="infotep-form-card">
         <form id="maintenance-form" onsubmit="App.handleMaintenanceSubmit(event, '${equipo.id}')">
+          <input type="hidden" name="programaId" id="input-programa-id" value="${activeProg.id}">
+          <input type="hidden" name="programaNombre" id="input-programa-nombre" value="${activeProg.nombre}">
           
           <!-- SECTION 1: DATOS GENERALES -->
           <div class="infotep-section-header">
@@ -856,7 +1426,7 @@ const App = (function () {
           <div class="infotep-form-grid-2">
             <div>
               <label class="infotep-label">Unidad / Grúa Asignada <span class="required-star">*</span></label>
-              <select name="equipoIdSelect" class="form-select" onchange="App.selectEquipo(this.value); App.openModuleMaintenance(this.value)">
+              <select name="equipoIdSelect" class="form-select" onchange="App.selectEquipo(this.value); App.openModuleMaintenance(this.value, '${activeProg.id}')">
                 ${state.equipos.map(e => `
                   <option value="${e.id}" ${e.id === equipo.id ? 'selected' : ''}>
                     ${e.codigo} - ${e.nombre} (${e.proyecto})
@@ -901,12 +1471,12 @@ const App = (function () {
             <div>
               <label class="infotep-label">Clasificación de Mantenimiento <span class="required-star">*</span></label>
               <div class="infotep-radio-group">
-                <div class="infotep-radio-box" id="box-mant-prev" style="border-color:#10b981; background:#ecfdf5;" onclick="App.selectMaintenanceType('Preventivo')">
-                  <input type="radio" name="tipoMantenimiento" value="Preventivo" checked id="radio-mant-prev" style="margin-right:8px;">
+                <div class="infotep-radio-box" id="box-mant-prev" style="${!isCorrectivo ? 'border-color:#10b981; background:#ecfdf5;' : 'border-color:#cbd5e1; background:#ffffff;'}" onclick="App.selectMaintenanceType('Preventivo')">
+                  <input type="radio" name="tipoMantenimiento" value="Preventivo" ${!isCorrectivo ? 'checked' : ''} id="radio-mant-prev" style="margin-right:8px;">
                   <label for="radio-mant-prev" style="cursor:pointer; font-weight:700; color:#065f46; font-size:0.82rem;">🟢 Preventivo Programado</label>
                 </div>
-                <div class="infotep-radio-box" id="box-mant-corr" onclick="App.selectMaintenanceType('Correctivo')">
-                  <input type="radio" name="tipoMantenimiento" value="Correctivo" id="radio-mant-corr" style="margin-right:8px;">
+                <div class="infotep-radio-box" id="box-mant-corr" style="${isCorrectivo ? 'border-color:#f59e0b; background:#fffbeb;' : 'border-color:#cbd5e1; background:#ffffff;'}" onclick="App.selectMaintenanceType('Correctivo')">
+                  <input type="radio" name="tipoMantenimiento" value="Correctivo" ${isCorrectivo ? 'checked' : ''} id="radio-mant-corr" style="margin-right:8px;">
                   <label for="radio-mant-corr" style="cursor:pointer; font-weight:700; color:#b45309; font-size:0.82rem;">🟠 Correctivo / Avería</label>
                 </div>
               </div>
@@ -920,11 +1490,12 @@ const App = (function () {
           <div class="infotep-form-grid-2" style="margin-top:1.25rem;">
             <div>
               <label class="infotep-label">Lectura de Horómetro Actual (hrs) <span class="required-star">*</span></label>
-              <input type="number" name="horometro" id="mant-horometro-input" class="form-input" value="${equipo.horometroActual}" required style="font-weight:700; color:#002b66;">
+              <input type="number" name="horometro" id="mant-horometro-input" class="form-input" value="${equipo.horometroActual}" required style="font-weight:700; color:#002b66;" oninput="App.updateNextMaintenancePrediction(this.value)">
+              <div style="font-size:0.72rem; color:#64748b; margin-top:3px;">Horómetro registrado en bitácora de la grúa</div>
             </div>
             <div>
-              <label class="infotep-label">Próximo Mantenimiento Programado</label>
-              <input type="text" class="form-input" value="${equipo.proximoMantenimientoHoras} hrs (Intervalo estándar 250 hrs)" readonly style="background:#f8fafc; color:#64748b;">
+              <label class="infotep-label">Próximo Mantenimiento Programado Proyectado</label>
+              <input type="text" id="mant-next-horometro-display" class="form-input" value="${nextHoroCalc}" readonly style="background:#f8fafc; color:#002b66; font-weight:700;">
             </div>
           </div>
 
@@ -937,10 +1508,10 @@ const App = (function () {
             <div>
               <label class="infotep-label">Suplidor / Proveedor de Repuestos <span class="required-star">*</span></label>
               <select name="suplidorRepuestos" class="form-select" id="select-mant-suplidor" required>
-                <option value="Distribuidora Corripio Industrial / Santo Domingo Motors">Distribuidora Corripio Industrial / Santo Domingo Motors</option>
-                <option value="Repuestos Hidráulicos del Caribe SRL">Repuestos Hidráulicos del Caribe SRL</option>
-                <option value="Mangueras y Conexiones Dominicana (MANCODOM)">Mangueras y Conexiones Dominicana (MANCODOM)</option>
-                <option value="Hydraulic Seals & Gaskets RD">Hydraulic Seals & Gaskets RD</option>
+                <option value="Distribuidora Corripio Industrial / Santo Domingo Motors" ${activeProg.suplidorSugerido.includes('Corripio') ? 'selected' : ''}>Distribuidora Corripio Industrial / Santo Domingo Motors</option>
+                <option value="Repuestos Hidráulicos del Caribe SRL" ${activeProg.suplidorSugerido.includes('Hidráulicos') ? 'selected' : ''}>Repuestos Hidráulicos del Caribe SRL</option>
+                <option value="Mangueras y Conexiones Dominicana (MANCODOM)" ${activeProg.suplidorSugerido.includes('MANCODOM') ? 'selected' : ''}>Mangueras y Conexiones Dominicana (MANCODOM)</option>
+                <option value="Hydraulic Seals & Gaskets RD" ${activeProg.suplidorSugerido.includes('Seals') ? 'selected' : ''}>Hydraulic Seals & Gaskets RD</option>
                 <option value="Equipos y Cables Industriales del Norte">Equipos y Cables Industriales del Norte</option>
                 <option value="Taller Central F&J Repairs (Stock Interno)">Taller Central F&J Repairs (Stock Interno)</option>
                 <option value="Repuestos Pesados Santo Domingo SRL">Repuestos Pesados Santo Domingo SRL</option>
@@ -954,37 +1525,76 @@ const App = (function () {
           </div>
 
           <div style="margin-top:1.25rem;">
-            <label class="infotep-label">Piezas o Repuestos Utilizados <span class="required-star">*</span></label>
-            <input type="text" name="piezasUtilizadas" class="form-input" placeholder="Ej. Filtro Cat 1G-8878 (1 ud), Manguera Gates 4 mallas (1 ud), Aceite 15W40 (8 galones)" value="Filtros Primario y Secundario Cat 1G-8878, Aceite Chevron Delo 400 15W40 (8 gal)" required>
+            <label class="infotep-label">Piezas o Repuestos Utilizados (${activeProg.codigo}) <span class="required-star">*</span></label>
+            <input type="text" name="piezasUtilizadas" class="form-input" placeholder="Detalle piezas y lubricantes..." value="${activeProg.piezasSugeridas}" required>
           </div>
 
           <div style="margin-top:1.25rem;">
             <label class="infotep-label">Descripción Detallada de Trabajos Realizados <span class="required-star">*</span></label>
-            <textarea name="descripcion" class="form-textarea" rows="3" placeholder="Detalle los trabajos mecánicos realizados..." required>Cambio de aceite de motor y filtros primario/secundario, engrase general de articulaciones, verificación de presión en bomba hidráulica principal y prueba de carga en pluma telescópica.</textarea>
+            <textarea name="descripcion" class="form-textarea" rows="3" placeholder="Detalle los trabajos mecánicos realizados..." required>${activeProg.descripcionCorta}</textarea>
           </div>
 
-          <!-- SECTION 4: COSTOS Y FINANZAS -->
-          <div class="infotep-section-header">
+          <!-- SECTION 4: PROTOCOLO TÉCNICO & CHECKLIST DEL PROGRAMA -->
+          <div class="infotep-section-header" style="justify-content:space-between; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="section-icon">⚙️</span>
+              <span class="section-title">CHECKLIST TÉCNICO DEL ${activeProg.codigo} (${activeProg.tareas.length} TAREAS OBLIGATORIAS)</span>
+            </div>
+            <button type="button" class="btn-infotep-submit" onclick="App.markAllProgramTasksOK()" style="padding:5px 12px; font-size:0.75rem; margin:0; background:#f0fdf4; color:#166534; border:1px solid #86efac;">
+              ✓ Marcar Todas Conformes
+            </button>
+          </div>
+
+          <div class="program-checklist-container">
+            ${activeProg.tareas.map((t, idx) => `
+              <div class="program-task-card">
+                <div class="program-task-info">
+                  <div class="task-number-subsystem">
+                    <span class="task-idx" style="color:${activeProg.color}; font-weight:800;">${idx + 1}.</span>
+                    <span class="task-subsystem-badge">${t.subsistema}</span>
+                  </div>
+                  <div class="task-desc-text">${t.tarea}</div>
+                </div>
+                <div class="program-task-options">
+                  <label class="prog-task-radio-label label-ok">
+                    <input type="radio" class="prog-chk-radio prog-chk-radio-ok" name="task_${t.id}" value="Conforme" checked>
+                    <span>✓ Conforme</span>
+                  </label>
+                  <label class="prog-task-radio-label label-obs">
+                    <input type="radio" class="prog-chk-radio" name="task_${t.id}" value="Observación">
+                    <span>⚠️ Obs.</span>
+                  </label>
+                  <label class="prog-task-radio-label label-na">
+                    <input type="radio" class="prog-chk-radio" name="task_${t.id}" value="N/A">
+                    <span>N/A</span>
+                  </label>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- SECTION 5: COSTOS Y FINANZAS -->
+          <div class="infotep-section-header" style="margin-top:2rem;">
             <span class="section-icon">💰</span>
-            <span class="section-title">COSTOS Y FINANZAS (RD$)</span>
+            <span class="section-title">COSTOS Y FINANZAS ESTIMADAS (RD$)</span>
           </div>
           <div class="infotep-form-grid-2">
             <div>
               <label class="infotep-label">Costo Mano de Obra (RD$) <span class="required-star">*</span></label>
-              <input type="number" id="costo-mano-obra" name="costoManoObra" class="form-input" value="12000" oninput="App.calculateTotalMaintenanceCost()" required>
+              <input type="number" id="costo-mano-obra" name="costoManoObra" class="form-input" value="${activeProg.costoManoObra}" oninput="App.calculateTotalMaintenanceCost()" required>
             </div>
             <div>
               <label class="infotep-label">Costo de Repuestos y Materiales (RD$) <span class="required-star">*</span></label>
-              <input type="number" id="costo-repuestos" name="costoRepuestos" class="form-input" value="18500" oninput="App.calculateTotalMaintenanceCost()" required>
+              <input type="number" id="costo-repuestos" name="costoRepuestos" class="form-input" value="${activeProg.costoRepuestos}" oninput="App.calculateTotalMaintenanceCost()" required>
             </div>
           </div>
 
           <div class="infotep-total-cost-box" style="margin-top:1.25rem;">
             <span style="font-size:0.9rem; font-weight:700; color:#166534;">Costo Total Estimado del Servicio:</span>
-            <span id="costo-total-display" style="font-size:1.35rem; font-weight:900; color:#15803d;">RD$ 30,500.00</span>
+            <span id="costo-total-display" style="font-size:1.35rem; font-weight:900; color:#15803d;">RD$ ${totalEstCost.toLocaleString('es-DO', { minimumFractionDigits: 2 })}</span>
           </div>
 
-          <!-- SECTION 5: REGISTRO FOTOGRÁFICO -->
+          <!-- SECTION 6: REGISTRO FOTOGRÁFICO -->
           <div class="infotep-section-header">
             <span class="section-icon">📸</span>
             <span class="section-title">EVIDENCIA Y REGISTRO FOTOGRÁFICO</span>
@@ -1005,8 +1615,8 @@ const App = (function () {
             <button type="button" class="btn-infotep-cancel" onclick="App.returnToDashboard()">
               Cancelar
             </button>
-            <button type="submit" class="btn-infotep-submit">
-              💾 Guardar Mantenimiento en Bitácora
+            <button type="submit" class="btn-infotep-submit" style="background:#002b66;">
+              💾 Guardar ${activeProg.codigo} en Bitácora
             </button>
           </div>
 
@@ -2196,24 +2806,44 @@ const App = (function () {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      if (data.success) {
-        state.inspecciones.unshift(data.inspection);
-        if (data.emailSent) state.correosEnviados.unshift(data.emailSent);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          state.inspecciones.unshift(data.inspection);
+          if (data.emailSent) state.correosEnviados.unshift(data.emailSent);
 
-        // Update local unit
-        const eq = state.equipos.find(e => e.id === equipoId);
-        if (eq) {
-          eq.horometroActual = data.equipo.horometroActual;
-          eq.estado = data.equipo.estado;
+          // Update local unit
+          const eqLocal = state.equipos.find(e => e.id === equipoId);
+          if (eqLocal) {
+            eqLocal.horometroActual = data.equipo.horometroActual;
+            eqLocal.estado = data.equipo.estado;
+          }
+
+          showToast('Inspección guardada y correo enviado a Gerencia y Operaciones', 'success');
+          closeActiveModal();
+          renderInspectionSummaryModal(data.inspection, eqLocal);
+          return;
         }
-
-        showToast('Inspección guardada y correo enviado a Gerencia y Operaciones', 'success');
-        closeActiveModal();
-        renderInspectionSummaryModal(data.inspection, eq);
       }
+      throw new Error(`Respuesta del servidor: ${res.status}`);
     } catch (err) {
-      showToast('Error al guardar inspección: ' + err.message, 'error');
+      console.warn('Backend API /api/inspection failed, saving locally:', err);
+      const localInsp = {
+        id: `insp-${Date.now()}`,
+        equipoId,
+        equipoCodigo: eq ? eq.codigo : 'Unidad',
+        fecha: new Date().toISOString().slice(0, 10),
+        hora: new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' }),
+        ...payload
+      };
+      state.inspecciones.unshift(localInsp);
+      if (eq) {
+        eq.horometroActual = horoVal;
+      }
+      try { localStorage.setItem('fj_repairs_data', JSON.stringify(state)); } catch(e){}
+      showToast('Inspección guardada localmente (Modo Nginx Estático / Offline)', 'success');
+      closeActiveModal();
+      renderInspectionSummaryModal(localInsp, eq);
     }
   }
 
@@ -2297,11 +2927,59 @@ const App = (function () {
   // =========================================================================
   // MODULO 3: DOCUMENTACIÓN DE MANTENIMIENTO (Jonathan Gil requirement)
   // =========================================================================
-  function openModuleMaintenance(equipoId) {
+  function openModuleMaintenance(equipoId, programaId) {
     const equipo = state.equipos.find(e => e.id === equipoId) || getSelectedEquipo();
-    state.currentFormView = { type: 'maintenance', equipoId: equipo.id };
+    if (programaId) {
+      state.selectedMaintenanceProgramId = programaId;
+    }
+    state.currentFormView = { 
+      type: 'maintenance', 
+      equipoId: equipo.id,
+      programaId: state.selectedMaintenanceProgramId || 'pm-250'
+    };
     renderApp();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectMaintenanceProgram(progId, equipoId) {
+    state.selectedMaintenanceProgramId = progId;
+    const eqId = equipoId || state.selectedEquipoId;
+    renderInPageMaintenanceForm(eqId, progId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openMaintenanceWithProgram(programaId, equipoId) {
+    state.selectedMaintenanceProgramId = programaId;
+    openModuleMaintenance(equipoId, programaId);
+  }
+
+  function openMaintenanceProgramsView(equipoId) {
+    closeActiveModal();
+    const eq = state.equipos.find(e => e.id === equipoId) || getSelectedEquipo();
+    state.currentFormView = { type: 'maintenance-programs', equipoId: eq.id };
+    renderApp();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function markAllProgramTasksOK() {
+    const radios = document.querySelectorAll('.prog-chk-radio-ok');
+    radios.forEach(r => { r.checked = true; });
+    showToast('Todas las tareas del programa técnico marcadas como Conformes ✓', 'success');
+  }
+
+  function updateNextMaintenancePrediction(horoVal) {
+    const progId = state.selectedMaintenanceProgramId || 'pm-250';
+    const prog = MAINTENANCE_PROGRAMS.find(p => p.id === progId) || MAINTENANCE_PROGRAMS[0];
+    const h = parseInt(horoVal, 10) || 0;
+    const targetEl = document.getElementById('mant-next-horometro-display');
+    if (targetEl) {
+      if (prog.id === 'correctivo') {
+        const eq = getSelectedEquipo();
+        targetEl.value = `${eq ? eq.proximoMantenimientoHoras : h + 500} hrs (Preserva intervalo estándar)`;
+      } else {
+        targetEl.value = `${h + prog.intervaloHoras} hrs (+${prog.intervaloHoras} hrs según ${prog.codigo})`;
+      }
+    }
   }
 
   function selectMaintenanceType(tipo) {
@@ -2353,18 +3031,35 @@ const App = (function () {
     const form = (e && e.target && e.target.tagName === 'FORM') ? e.target : (document.querySelector('#maintenance-form') || document.querySelector('#maintenance-modal form') || (e && e.target && e.target.closest('form')));
     const formData = form ? new FormData(form) : new FormData();
 
+    const progId = formData.get('programaId') || state.selectedMaintenanceProgramId || 'pm-250';
+    const prog = MAINTENANCE_PROGRAMS.find(p => p.id === progId) || MAINTENANCE_PROGRAMS[0];
+
+    // Gather checklist tasks
+    const checklistTareas = (prog.tareas || []).map(t => {
+      const estadoVal = formData.get(`task_${t.id}`) || 'Conforme';
+      return {
+        id: t.id,
+        subsistema: t.subsistema,
+        tarea: t.tarea,
+        estado: estadoVal
+      };
+    });
+
     const payload = {
       equipoId,
-      tipo: formData.get('tipoMantenimiento') || 'Preventivo',
+      tipo: formData.get('tipoMantenimiento') || (prog.id === 'correctivo' ? 'Correctivo' : 'Preventivo'),
+      programaId: prog.id,
+      programaNombre: prog.nombre,
+      checklistTareas,
       fecha: formData.get('fecha') || new Date().toISOString().slice(0,16),
       horometro: formData.get('horometro') || 4890,
       ubicacion: formData.get('ubicacion') || 'In-situ en el proyecto',
       realizadoPor: formData.get('realizadoPor') || (state.currentUser ? state.currentUser.name : 'Técnico F&J Repairs'),
-      descripcion: formData.get('descripcion') || 'Mantenimiento preventivo general y engrase de pluma',
-      piezasUtilizadas: formData.get('piezasUtilizadas') || 'Filtro Cat 1G-8878, Aceite 15W40',
-      costoManoObra: formData.get('costoManoObra') || 12000,
-      costoRepuestos: formData.get('costoRepuestos') || 18500,
-      suplidorRepuestos: formData.get('suplidorRepuestos') || 'Santo Domingo Motors / Repuestos Hidráulicos',
+      descripcion: formData.get('descripcion') || prog.descripcionCorta,
+      piezasUtilizadas: formData.get('piezasUtilizadas') || prog.piezasSugeridas,
+      costoManoObra: formData.get('costoManoObra') || prog.costoManoObra,
+      costoRepuestos: formData.get('costoRepuestos') || prog.costoRepuestos,
+      suplidorRepuestos: formData.get('suplidorRepuestos') || prog.suplidorSugerido,
       facturaSuplidor: formData.get('facturaSuplidor') || 'B01-00049102',
       fotoReferencia: document.getElementById('mant-photo-thumb') ? document.getElementById('mant-photo-thumb').src : 'assets/repuesto_referencia.jpg'
     };
@@ -2375,23 +3070,55 @@ const App = (function () {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      if (data.success) {
-        state.mantenimientos.unshift(data.maintenance);
-        if (data.emailSent) state.correosEnviados.unshift(data.emailSent);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          state.mantenimientos.unshift(data.maintenance);
+          if (data.emailSent) state.correosEnviados.unshift(data.emailSent);
 
-        const eq = state.equipos.find(e => e.id === equipoId);
-        if (eq) {
-          eq.horometroActual = data.equipo.horometroActual;
-          eq.proximoMantenimientoHoras = data.equipo.proximoMantenimientoHoras;
-          eq.estado = data.equipo.estado;
+          const eq = state.equipos.find(e => e.id === equipoId);
+          if (eq) {
+            eq.horometroActual = data.equipo.horometroActual;
+            eq.proximoMantenimientoHoras = data.equipo.proximoMantenimientoHoras;
+            eq.estado = data.equipo.estado;
+          }
+
+          showToast(`Mantenimiento [${prog.codigo}] registrado con éxito y correo despachado`, 'success');
+          returnToDashboard();
+          return;
         }
-
-        showToast('Mantenimiento cargado a Bitácora 1 y correo enviado a Gerencia', 'success');
-        returnToDashboard();
       }
+      throw new Error(`Respuesta del servidor: ${res.status}`);
     } catch (err) {
-      showToast('Error al registrar mantenimiento: ' + err.message, 'error');
+      console.warn('Backend API /api/maintenance failed, saving locally:', err);
+      const manoObraNum = parseFloat(payload.costoManoObra) || 0;
+      const repuestosNum = parseFloat(payload.costoRepuestos) || 0;
+      const totalNum = manoObraNum + repuestosNum;
+      const horoNum = parseInt(payload.horometro, 10) || 4890;
+      const eq = state.equipos.find(e => e.id === equipoId);
+
+      const localMaintenance = {
+        id: `mant-${Date.now()}`,
+        equipoId,
+        equipoCodigo: eq ? eq.codigo : 'Unidad',
+        ...payload,
+        costoManoObra: manoObraNum,
+        costoRepuestos: repuestosNum,
+        costoTotal: totalNum,
+        moneda: 'DOP'
+      };
+
+      state.mantenimientos.unshift(localMaintenance);
+      if (eq) {
+        eq.horometroActual = horoNum;
+        if (payload.tipo === 'Preventivo') {
+          eq.proximoMantenimientoHoras = horoNum + (prog.intervaloHoras || 500);
+          eq.estado = 'Operativo';
+        }
+      }
+      try { localStorage.setItem('fj_repairs_data', JSON.stringify(state)); } catch(e){}
+      showToast(`Mantenimiento [${prog.codigo}] guardado localmente (Modo Nginx Estático / Offline)`, 'success');
+      returnToDashboard();
     }
   }
 
@@ -3321,6 +4048,12 @@ const App = (function () {
     calculateTotalMaintenanceCost,
     handleMaintenancePhotoSelection,
     handleMaintenanceSubmit,
+    selectMaintenanceProgram,
+    openMaintenanceWithProgram,
+    openMaintenanceProgramsView,
+    markAllProgramTasksOK,
+    updateNextMaintenancePrediction,
+    renderInPageMaintenanceProgramsCatalog,
     simulateScanDetected,
     approveRequest,
     closeActiveModal,

@@ -193,6 +193,9 @@ const server = http.createServer(async (req, res) => {
         const {
           equipoId,
           tipo,
+          programaId,
+          programaNombre,
+          checklistTareas,
           fecha,
           horometro,
           descripcion,
@@ -218,10 +221,19 @@ const server = http.createServer(async (req, res) => {
         const totalNum = manoObraNum + repuestosNum;
         const horometroNum = parseInt(horometro, 10) || equipo.horometroActual;
 
-        // Si es preventivo, actualizar el próximo umbral de mantenimiento preventivo
-        if (tipo === 'Preventivo') {
+        // Calcular intervalo según el programa seleccionado
+        let incrementoIntervalo = equipo.intervaloMantenimiento || 500;
+        if (programaId === 'pm-250') incrementoIntervalo = 250;
+        else if (programaId === 'pm-500') incrementoIntervalo = 500;
+        else if (programaId === 'pm-1000') incrementoIntervalo = 1000;
+        else if (programaId === 'pm-2000') incrementoIntervalo = 2000;
+
+        const isPreventivo = tipo === 'Preventivo' || (programaId && programaId.startsWith('pm-'));
+
+        // Si es preventivo o de programa, actualizar el próximo umbral
+        if (isPreventivo) {
           equipo.ultimoMantenimientoHoras = horometroNum;
-          equipo.proximoMantenimientoHoras = horometroNum + (equipo.intervaloMantenimiento || 500);
+          equipo.proximoMantenimientoHoras = horometroNum + incrementoIntervalo;
           equipo.estado = 'Operativo';
         }
 
@@ -230,6 +242,9 @@ const server = http.createServer(async (req, res) => {
           equipoId,
           equipoCodigo: equipo.codigo,
           tipo: tipo || 'Preventivo',
+          programaId: programaId || (tipo === 'Correctivo' ? 'correctivo' : 'pm-250'),
+          programaNombre: programaNombre || (tipo === 'Correctivo' ? 'Mantenimiento Correctivo / Avería' : 'Programa 250 Horas (PM-1 Básico)'),
+          checklistTareas: checklistTareas || [],
           fecha: fecha || new Date().toISOString().replace('T', ' ').substring(0, 16),
           horometro: horometroNum,
           descripcion: descripcion || '',
@@ -249,18 +264,24 @@ const server = http.createServer(async (req, res) => {
         db.mantenimientos.unshift(newMaintenance);
 
         // Generar correo automático a gerencia y contabilidad
+        const tituloCorreo = `[REGISTRO MANTENIMIENTO: ${newMaintenance.programaNombre.toUpperCase()}] ${equipo.codigo} - Total: RD$ ${totalNum.toLocaleString()}`;
+        const tareasEjecutadas = (checklistTareas || []).filter(t => t.estado === 'OK' || t.estado === 'Conforme').length;
+        const totalTareas = (checklistTareas || []).length;
+
         const newEmail = {
           id: `email-${Date.now()}`,
           destinatario: `${db.company.email}, ${db.company.executive}`,
-          asunto: `[REGISTRO MANTENIMIENTO ${tipo.toUpperCase()}] ${equipo.codigo} - Total: RD$ ${totalNum.toLocaleString()}`,
+          asunto: tituloCorreo,
           fecha: new Date().toISOString().replace('T', ' ').substring(0, 16),
           remitente: 'taller@fjrepairs.com',
           cuerpo: `Se ha registrado una nueva orden de mantenimiento en el sistema:\n` +
-            `• Tipo: Mantenimiento ${tipo}\n` +
+            `• Programa: ${newMaintenance.programaNombre}\n` +
+            `• Tipo: Mantenimiento ${tipo || 'Preventivo'}\n` +
             `• Equipo: ${equipo.codigo} (${equipo.nombre})\n` +
             `• Ubicación de trabajo: ${ubicacion}\n` +
             `• Responsable: ${realizadoPor}\n` +
-            `• Horómetro: ${horometroNum} hrs (Próximo preventivo programado a las ${equipo.proximoMantenimientoHoras} hrs)\n` +
+            `• Horómetro actual: ${horometroNum} hrs (Próximo servicio programado a las ${equipo.proximoMantenimientoHoras} hrs)\n` +
+            `• Tareas completadas: ${totalTareas > 0 ? `${tareasEjecutadas} de ${totalTareas} tareas técnicas conformes` : 'Protocolo estándar verificado'}\n` +
             `• Costo Mano de Obra: RD$ ${manoObraNum.toLocaleString()}\n` +
             `• Costo Repuestos: RD$ ${repuestosNum.toLocaleString()}\n` +
             `• Costo Total: RD$ ${totalNum.toLocaleString()}\n` +

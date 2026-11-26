@@ -2676,3 +2676,335 @@ body.page-mobile {
     page-break-inside: avoid;
   }
 }
+
+
+/* ==========================================================================
+   PROGRAMAS DE MANTENIMIENTO TÉCNICO (PM-1 a PM-4 & CORRECTIVO)
+   ========================================================================== */
+
+.maintenance-program-tabs-container {
+  margin-bottom: 1.25rem;
+  width: 100%;
+}
+
+.maintenance-program-tabs-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #002b66;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.maintenance-program-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.program-tab-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.program-tab-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+}
+
+.program-tab-btn .program-tab-code {
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.program-tab-btn .program-tab-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.program-tab-btn .program-tab-hrs {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Program Tab Color Variations */
+.program-tab-btn.badge-pm-250 .program-tab-code { color: #059669; }
+.program-tab-btn.badge-pm-250.active {
+  border-color: #059669;
+  background: #ecfdf5;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+}
+
+.program-tab-btn.badge-pm-500 .program-tab-code { color: #0284c7; }
+.program-tab-btn.badge-pm-500.active {
+  border-color: #0284c7;
+  background: #f0f9ff;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.program-tab-btn.badge-pm-1000 .program-tab-code { color: #7c3aed; }
+.program-tab-btn.badge-pm-1000.active {
+  border-color: #7c3aed;
+  background: #f5f3ff;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+.program-tab-btn.badge-pm-2000 .program-tab-code { color: #dc2626; }
+.program-tab-btn.badge-pm-2000.active {
+  border-color: #dc2626;
+  background: #fef2f2;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.program-tab-btn.badge-pm-corr .program-tab-code { color: #d97706; }
+.program-tab-btn.badge-pm-corr.active {
+  border-color: #d97706;
+  background: #fffbeb;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+/* Program Summary Banner */
+.program-banner-summary {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left-width: 5px;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.program-banner-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.program-banner-badge {
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.program-banner-level {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.program-banner-desc {
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+/* Program Checklist Container */
+.program-checklist-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 0.5rem;
+}
+
+.program-task-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  flex-wrap: wrap;
+}
+
+.program-task-card:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.program-task-info {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.task-number-subsystem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.task-idx {
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+.task-subsystem-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #002b66;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+.task-desc-text {
+  font-size: 0.82rem;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.program-task-options {
+  display: inline-flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.prog-task-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  background: #ffffff;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.prog-task-radio-label.label-ok {
+  color: #059669;
+  font-weight: 700;
+}
+
+.prog-task-radio-label.label-obs {
+  color: #d97706;
+  font-weight: 700;
+}
+
+.prog-task-radio-label.label-na {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.prog-task-radio-label:has(input:checked) {
+  border-color: currentColor;
+  background: #f8fafc;
+}
+
+.prog-task-radio-label.label-ok:has(input:checked) {
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.prog-task-radio-label.label-obs:has(input:checked) {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+/* Program Catalog Grid & Cards */
+.program-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.program-catalog-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.program-catalog-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.program-catalog-header {
+  padding: 1.25rem 1.25rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.program-catalog-body {
+  padding: 1.25rem;
+  flex: 1;
+}
+
+.program-catalog-footer {
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-start-program {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.btn-start-program:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+/* Mobile specific styling for program tabs & catalog */
+@media (max-width: 640px) {
+  .maintenance-program-tabs {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .program-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .program-task-card {
+    padding: 10px;
+  }
+  .program-task-options {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
